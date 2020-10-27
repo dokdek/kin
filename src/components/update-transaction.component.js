@@ -5,7 +5,7 @@ export default class UpdateTransaction extends Component {
     render () {
         return (
             <div>
-            <p>update transaction page</p>
+            <p>Update transaction page</p>
             </div>
         )
     }
