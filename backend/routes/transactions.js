@@ -11,11 +11,15 @@ router.route('/add').post((req, res) => {
     const description = req.body.description;
     const amount = Number(req.body.amount);
     const date = Date.parse(req.body.date);
+    const category = req.body.category;
+    const paymentType = req.body.paymentType;
     const newTransaction = new Transaction({
         //username,
         description,
         amount,
         date,
+        category,
+        paymentType
     });
     newTransaction.save()
         .then(() => res.json('Transaction added'))
@@ -41,6 +45,8 @@ router.route('/update/:id').post((req, res) => {
             transaction.description = req.body.description;
             transaction.amount = Number(req.body.amount);
             transaction.date = Date.parse(req.body.date);
+            transaction.category = req.body.category;
+            transaction.paymentType = req.body.paymentType;
             transaction.save()
                 .then(() => res.json('Updated successfully'))
                 .catch(err => res.status(400).json('Error: '+ err));
