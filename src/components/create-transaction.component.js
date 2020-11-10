@@ -6,6 +6,7 @@ import {
   MuiPickersUtilsProvider,
   DatePicker
 } from '@material-ui/pickers';
+import { Autocomplete } from '@material-ui/lab';
 
 const useStyles = makeStyles(() => ({
   FormStyle: {
@@ -17,7 +18,8 @@ const CreateTransaction = () => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
-  const [category, setCategory] = newState([]);
+  //const [category, setCategory] = newState([]);
+  const category = ["memes", "mcdondalds"];
 
 
 function onSubmit(e) {
@@ -49,6 +51,7 @@ function onSubmit(e) {
         onChange={e => setDate(date)}
       />
       </MuiPickersUtilsProvider>
+      <Autocomplete id="category-select" style={{ width: 200 }} options={category} renderInput={(params) => <TextField {...params} label="Category" variant="outlined"/>}/>
       <Button color='primary' variant='contained' type='submit'>Add</Button>
     </form>
   );
