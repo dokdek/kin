@@ -17,6 +17,7 @@ const CreateTransaction = () => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
+  const [category, setCategory] = newState([]);
 
 
 function onSubmit(e) {

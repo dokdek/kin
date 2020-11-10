@@ -10,6 +10,13 @@ const userSchema = new Schema ({
         minlength: true,
         trim: true
     },
+    category: {
+        type: Array,
+        required: true,
+        minlength: true,
+        trim: true,
+        unique: true
+    }
 }, {
     timestamps: true
 });
