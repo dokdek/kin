@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+let Transaction = require('../models/transaction.model');
 
 const userSchema = new Schema ({
     username: {
@@ -10,8 +11,15 @@ const userSchema = new Schema ({
         minlength: true,
         trim: true
     },
-    category: {
+    categories: {
         type: Array,
+        required: true,
+        minlength: true,
+        trim: true,
+        unique: true
+    },
+    transactions: {
+        type: Transaction,
         required: true,
         minlength: true,
         trim: true,

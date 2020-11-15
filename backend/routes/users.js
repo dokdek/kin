@@ -1,6 +1,8 @@
 const router = require('express').Router();
 let User = require('../models/user.model');
+const admin = require('../admin/admin');
 const { route } = require('./transactions');
+
 
 router.route('/').get((req, res) => {
     User.find()
@@ -9,11 +11,17 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/add').post((req, res) => {
-    const username = req.body.username;
-    const newUser = new User({username});
+    const email = req.body.email;
+    const password = req.body.password;
+    firebase.auth().createUserWithEmailAndPassword(username,password).catch((err) => {
+        var errorCode = error.code; //firebase error
+        var errorMsg = error.message; //firebase msg
+        console.log(error);
+    })
+    /*const newUser = new User({username});
     newUser.save()
         .then(() => res.json('User added'))
-        .catch(err => res.status(400).json('Error: ' + err));
+        .catch(err => res.status(400).json('Error: ' + err));*/
 })
 
 router.route('/:id').get((req,res) => {

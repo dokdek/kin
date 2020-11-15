@@ -19,7 +19,7 @@ const CreateTransaction = () => {
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
   //const [category, setCategory] = newState([]);
-  const category = ["memes", "mcdondalds"];
+  const category = ["memes", "mcdondalds"]; //Test values
 
 
 function onSubmit(e) {
