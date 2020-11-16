@@ -1,5 +1,5 @@
-import * as firebase from 'firebase-app';
-import 'firebase-auth';
+import firebase from 'firebase/app';
+require('dotenv').config();
 
 
 const config = {
@@ -13,8 +13,6 @@ const config = {
     measurementId: process.env.FIREBASE_MEASUREMENT_ID
  };
 
- firebase.intializeApp(config);
-
- export const auth = firebase.auth;
+ firebase.initializeApp(config);
 
  export default firebase;

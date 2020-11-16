@@ -14,7 +14,7 @@ function App() {
         <Route path='/' exact component={TransactionList}/>
         <Route path='/update/:id' component={UpdateTransaction}/>
         <Route path='/newTransaction' component={CreateTransaction}/>
-        <Route path='/user' component={CreateUser}/>
+        <Route path='/signup' component={CreateUser}/>
     </Router>
   );
 }

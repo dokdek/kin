@@ -35,6 +35,9 @@ const Navbar = () => {
         <Button component={Link} to="/newTransaction">
             Add
         </Button>
+        <Button component={Link} to="/signup">
+          New User
+        </Button>
       </Toolbar>
     </AppBar>
   );

@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose  = require('mongoose');
-//const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users');
 const transactionsRouter = require('./routes/transactions');
 require('dotenv').config();
 
@@ -12,7 +12,7 @@ const connection = mongoose.connection;
 
 app.use(cors());
 app.use(express.json());
-//app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 app.use('/transactions', transactionsRouter);
 
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true});

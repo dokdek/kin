@@ -19,7 +19,7 @@ const userSchema = new Schema ({
         unique: true
     },
     transactions: {
-        type: Transaction,
+        type: String,
         required: true,
         minlength: true,
         trim: true,
