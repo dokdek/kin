@@ -11,7 +11,7 @@ require('dotenv').config();
 });*/
 
 router.route('/signup').post((req, res) => {
-    Axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBkF762F8NkKq2CgDV6wzgd_ubwwX4Ws3I", req)
+    Axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=", req)
     .then(res => res.data)
     .catch(err => err);
 });
