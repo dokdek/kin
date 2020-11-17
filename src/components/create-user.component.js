@@ -17,7 +17,7 @@ const CreateUser = () => {
       password: password,
       returnSecureToken: true
     }
-    Axios.post("http://localhost:5000/transactions/signup", user)
+    Axios.post("http://localhost:5000/users/signup", user)
     .then(res => console.log(res.data))
     .catch(err => console.log(err));
   }
