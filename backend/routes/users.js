@@ -1,7 +1,8 @@
 const Axios = require('axios');
 const router = require('express').Router();
 let User = require('../models/user.model');
-const admin = require('../admin/firebase-config');
+const admin = require('../admin/firebase-admin');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
@@ -11,20 +12,26 @@ require('dotenv').config();
         .catch(err => res.status(400).json('Error: '+ err));
 });*/
 
+router.route('/login').post((req,res) => {
+    console.log(req.body);
+    Axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + process.env.FIREBASE_API, req.body)
+        .then((response) => {
+            //TODO: send localId back to client along with refresh token.
+            console.log(response.data);
+            res.send(response.data);
+        })
+        .catch(error => {
+            if (error.response) {
+              console.log(error.response.data);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log("Error", error.message);
+            } 
+          });
+})
+
 router.route('/signup').post((req, res) => {
-    /*Axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + process.env.FIREBASE_API, req)
-    .then(response => res.json(response))
-    .catch(error => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        } 
-      });*/
       admin.auth().createUser({
         email: req.body.email,
         password: req.body.password,
