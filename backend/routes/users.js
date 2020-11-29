@@ -6,45 +6,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
-/*router.route('/').get((req, res) => {
-    User.find()
-        .then(users => res.json(users))
-        .catch(err => res.status(400).json('Error: '+ err));
-});*/
-
-router.route('/login').post((req,res) => {
-    console.log(req.body);
-    Axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + process.env.FIREBASE_API, req.body)
-        .then((response) => {
-            //TODO: send localId back to client along with refresh token.
-            console.log(response.data);
-            res.send(response.data);
-        })
-        .catch(error => {
-            if (error.response) {
-              console.log(error.response.data);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log("Error", error.message);
-            } 
-          });
-})
-
-router.route('/signup').post((req, res) => {
-      admin.auth().createUser({
-        email: req.body.email,
-        password: req.body.password,
-      })
-        .then(function(userRecord) {
-          // See the UserRecord reference doc for the contents of userRecord.
-          console.log('Successfully created new user:', userRecord.uid);
-          res.json(userRecord.uid);
-        })
-        .catch(function(error) {
-          console.log('Error creating new user:', error);
-        });
-      
+router.route('/secretTest').get((req, res) => {
+    res.json("ok");
 });
 
 /*router.route('/:id').get((req,res) => {

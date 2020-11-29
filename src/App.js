@@ -6,11 +6,13 @@ import TransactionList from './components/transaction-list.component';
 import CreateTransaction from './components/create-transaction.component';
 import CreateUser from './components/create-user.component';
 import UpdateTransaction from './components/update-transaction.component';
+import Login from './components/login';
 
 function App() {
   return (
     <Router>
         <Navbar />
+        <Route path='/login' exact component={Login}/>
         <Route path='/' exact component={TransactionList}/>
         <Route path='/update/:id' component={UpdateTransaction}/>
         <Route path='/newTransaction' component={CreateTransaction}/>
