@@ -9,12 +9,13 @@ router.route('/').get((req, res) => {
 
 router.route('/add').post((req, res) => {
     const description = req.body.description;
+    const username = req.body.username;
     const amount = Number(req.body.amount);
     const date = Date.parse(req.body.date);
     const category = req.body.category;
     const paymentType = req.body.paymentType;
     const newTransaction = new Transaction({
-        //username,
+        username,
         description,
         amount,
         date,
@@ -41,7 +42,7 @@ router.route('/:id').delete((req, res) => {
 router.route('/update/:id').post((req, res) => {
     Transaction.findById(req.params.id)
         .then(transaction => {
-            //transaction.username = req.body.username;
+            transaction.username = req.body.username;
             transaction.description = req.body.description;
             transaction.amount = Number(req.body.amount);
             transaction.date = Date.parse(req.body.date);

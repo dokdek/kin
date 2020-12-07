@@ -29,7 +29,7 @@ const Navbar = () => {
         <IconButton>
           <MenuIcon></MenuIcon>
         </IconButton>
-        <Button component={Link} to="/">
+        <Button component={Link} to="/list">
             List
         </Button>
         <Button component={Link} to="/newTransaction">

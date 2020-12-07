@@ -6,9 +6,28 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
-router.route('/secretTest').get((req, res) => {
-    res.json("ok");
+router.route('/getCategory').get((req,res) => {
+    User.find({username: req.body.username},(err, user) => {
+        if(err){
+            res.send(err);
+        }else {
+            res.json(user.categories);
+        }
+    });
 });
+
+router.route('/addCategory').post((req,res) => {
+    User.find({username: req.body.username},(err, user) => {
+        if(err){
+            res.send(err);
+        }else {
+            user.categories.push(req.body.category);
+            user.save()
+                .then(()=>res.json("Success"))
+                .catch(err => res.status(400).json("Error: " + err));
+        }
+    })
+})
 
 /*router.route('/:id').get((req,res) => {
     User.findById(req.params.id)

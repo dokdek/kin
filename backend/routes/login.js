@@ -2,6 +2,8 @@ const router = require('express').Router();
 const Axios = require('axios');
 const admin = require('../admin/firebase-admin');
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie-parser');
+let User = require('../models/user.model');
 
 
 router.route('/login').post((req,res) => {
@@ -9,12 +11,11 @@ router.route('/login').post((req,res) => {
     Axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + process.env.FIREBASE_API, req.body)
         .then((response) => {
             //TODO: send localId back to client along with refresh token.
-            console.log(response.data);
             const token = jwt.sign({
                 username: response.data.localId
             }, process.env.TOKEN_SECRET, {expiresIn: '1 hour'});
-            res.json({access_token: token});
-            //res.send(response.data);
+            res.cookie('token',token,{httpOnly: true});
+            res.json(token);
         })
         .catch(error => {
             if (error.response) {
@@ -36,12 +37,20 @@ router.route('/signup').post((req, res) => {
         .then(function(userRecord) {
           // See the UserRecord reference doc for the contents of userRecord.
           console.log('Successfully created new user:', userRecord.uid);
+          const username = userRecord.uid;
+          const categories = [];
+          const newUser = new User({
+            username,
+            categories
+          })
+          newUser.save()
+          .then(() => res.json("Success"))
+          .catch(err => res.status(400).json("Error: " + err));
           res.json(userRecord.uid);
         })
         .catch(function(error) {
           console.log('Error creating new user:', error);
-        });
-      
+        });      
 });
 
 module.exports = router;

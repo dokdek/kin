@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {TextField, Button} from "@material-ui/core";
 import Axios from "axios";
+import { Redirect } from "react-router-dom";
 const auth = require('../firebase/create-user');
 
 
@@ -17,8 +18,10 @@ const Login = () => {
       password: '!wsadsadas233534',
       returnSecureToken: true
     }
-    Axios.post("http://localhost:5000/login/login", user)
-    .then(res => setEmail("login success"))
+    Axios.post("http://localhost:5000/login/login", user, {withCredentials: true})
+    .then(res => {
+      setEmail("login success")
+     } )
     .catch(error => {
       if (error.response) {
         console.log(error.response.data);
