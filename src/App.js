@@ -21,7 +21,6 @@ function App() {
   function checkAuth() {
     Axios.get("http://localhost:5000/auth", { withCredentials: true })
       .then((res) => {
-        console.log("token ok");
         console.log(res.data);
         setAuth(res.data.auth);
         setUsername(jwtDecode(res.data.token).username);

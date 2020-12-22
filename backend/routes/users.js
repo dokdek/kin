@@ -7,22 +7,24 @@ require('dotenv').config();
 router.route('/getCategory').post((req,res) => {
     User.findOne({username: req.body.username},(err, user) => {
         if(err){
-            res.send(err);
-        }else {
-            console.log(user.username);
-            console.log(user);
+            res.status(400).json("Error: no result found");
+        }else if(user){
             res.json(user.categories);
+        }else{
+            res.status(400).json("Error: no result found");
         }
     });
 });
 
 router.route('/getPayment').post((req,res) => {
     console.log(req.body.username);
-    User.find({username: req.body.username},(err, user) => {
+    User.findOne({username: req.body.username},(err, user) => {
         if(err){
-            res.send(err);
-        }else {
+            res.status(400).json("Error: no result found");
+        }else if(user){
             res.json(user.paymentType);
+        }else{
+            res.status(400).json("Error: no result found");
         }
     });
 });
@@ -30,8 +32,8 @@ router.route('/getPayment').post((req,res) => {
 router.route('/addCategory').post((req,res) => {
     User.findOne({username: req.body.username},(err, user) => {
         if(err){
-            res.send(err);
-        }else {
+            res.status(400).json("Error: no result found");
+        }else if(user){
             const category = {
                 category: req.body.category,
                 subCategories: []
@@ -40,6 +42,8 @@ router.route('/addCategory').post((req,res) => {
             user.save()
                 .then(()=>res.json("Success"))
                 .catch(err => res.status(400).json("Error: " + err));
+        }else{
+            res.status(400).json("Error: no result found");
         }
     })
 })
@@ -47,14 +51,16 @@ router.route('/addCategory').post((req,res) => {
 router.route('/addSubCategory').post((req,res) => {
     User.findOne({username: req.body.username},(err,user) => {
         if(err){
-            res.send(err);
-        }else {
+            res.status(400).json("Error: no result found");
+        }else if(user){
             console.log(user.categories[0]);
             user.categories[user.categories.findIndex((category) => category.category === req.body.category)].subCategories.push(req.body.subCategory); //Finds index of main cat, then push subcat to maincat
             user.markModified("categories"); //Due to nested object, need to specify what property was changed for mongoose to save.
             user.save()
                 .then(()=>res.json("Success"))
                 .catch(err=>res.status(400).json("Error: " + err));
+        }else{
+            res.status(400).json("Error: no result found");
         }
     })
 })
@@ -62,8 +68,8 @@ router.route('/addSubCategory').post((req,res) => {
 router.route('/addPayment').post((req,res) => {
     User.findOne({username: req.body.username},(err, user) => {
         if(err){
-            res.send(err);
-        }else {
+            res.status(400).json("Error: no result found");
+        }else if(user){
             const payment = {
                 payment: req.body.payment,
                 subPayments: []
@@ -72,6 +78,8 @@ router.route('/addPayment').post((req,res) => {
             user.save()
                 .then(()=>res.json("Success"))
                 .catch(err => res.status(400).json("Error: " + err));
+        }else{
+            res.status(400).json("Error: no result found");
         }
     })
 })
@@ -79,14 +87,16 @@ router.route('/addPayment').post((req,res) => {
 router.route('/addSubPayment').post((req,res) => {
     User.findOne({username: req.body.username},(err,user) => {
         if(err){
-            res.send(err);
-        }else {
+            res.status(400).json("Error: no result found");
+        }else if(user){
             console.log(user.paymentType[0]);
             user.paymentType[user.paymentType.findIndex((payment) => payment.payment === req.body.payment)].subPayments.push(req.body.subPayment); //Finds index of main cat, then push subcat to maincat
             user.markModified("paymentType")
             user.save()
                 .then(()=>res.json("Success"))
                 .catch(err=>res.status(400).json("Error: " + err));
+        }else{
+            res.status(400).json("Error: no result found");
         }
     })
 })

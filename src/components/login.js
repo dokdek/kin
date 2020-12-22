@@ -19,7 +19,6 @@ const Login = ({setUsername}) => {
     }
     Axios.post("http://localhost:5000/login/login", user, {withCredentials: true})
     .then(res => {
-      console.log("login ok")
       setUsername(jwtDecode(res.data).username);
       history.push("/list");
      } )

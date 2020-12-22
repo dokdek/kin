@@ -6,6 +6,7 @@ import { Redirect } from "react-router-dom";
 const TransactionList = ({ isAuth, username, filter}) => {
   const [transaction, setTransaction] = useState([]);
 
+  //Need to change widths
   const columns = [
     { field: "date", headerName: "Date", width: 130 },
     { field: "description", headerName: "Description", width: 130 },
@@ -17,12 +18,10 @@ const TransactionList = ({ isAuth, username, filter}) => {
   const tempRow = [{ id: 1, description: "" }];
 
   useEffect(() => {
-    var index = 0;
     if (isAuth == true) {
       Axios.post("http://localhost:5000/transactions",{username: username},{withCredentials: true})
         .then((res) => {
-          res.data.map((trans) => {
-            console.log(trans);
+          res.data.map((trans, index) => {
             const modifiedTrans = {
               id: index,
               description: trans.description,
@@ -32,8 +31,6 @@ const TransactionList = ({ isAuth, username, filter}) => {
               account: trans.subPayment
             };
             setTransaction((transaction) => [...transaction, modifiedTrans]);
-            console.log(transaction);
-            index++;
           });
         })
         .catch((err) => {
