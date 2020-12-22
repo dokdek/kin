@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, TextField, Button } from "@material-ui/core";
+import { makeStyles, TextField, Button, ListSubheader, MenuItem, FormControl, Select, InputLabel } from "@material-ui/core";
 import Axios from "axios";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
-import { Autocomplete } from "@material-ui/lab";
+import {Redirect} from 'react-router-dom'
 
 const useStyles = makeStyles(() => ({
   FormStyle: {
@@ -11,8 +11,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CreateTransaction = () => {
-  const [name, setName] = useState("");
+const CreateTransaction = ({ isAuth, username }) => {
+  const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
   const [categoryList, setCategoryList] = useState([]);
@@ -21,17 +21,35 @@ const CreateTransaction = () => {
   const [payment, setPayment] = useState("");
 
   useEffect(() => {
-    getCategory();
-    //getPaymentList();
+    getLists();
   }, []);
 
-  function getCategory() {
-    Axios.get("http://localhost:5000/users/getCategory", {
+  function getLists() {
+    const user = { username: username };
+    Axios.post("http://localhost:5000/users/getCategory", user, {
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log(response);
+        if (response.data != "") {
+          setCategoryList(response.data);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
+    Axios.post("http://localhost:5000/users/getPayment", user, {
       withCredentials: true,
     })
       .then((response) => {
         if (response.data != "") {
-          setCategoryList(response.data);
+          setPaymentList(response.data);
         }
       })
       .catch((error) => {
@@ -49,61 +67,90 @@ const CreateTransaction = () => {
     e.preventDefault();
 
     const transaction = {
-      description: name,
+      username: username,
+      description: description,
       amount: amount,
       date: date,
       category: category,
-      paymentType: payment
+      paymentType: payment,
     };
     Axios.post("http://localhost:5000/transactions/add", transaction, {
       withCredentials: true,
     })
       .then((res) => console.log(res.data))
-      .catch((res) => console.log(res));
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
     console.log(transaction);
   }
 
-  // const classes = useStyles();
-  //need to add on change on the catagory picker.
-  return (
-    <form noValidate autoComplete="off" onSubmit={onSubmit}>
-      <TextField
-        id="standard-basic"
-        label="Name"
-        onChange={(e) => {
-          console.log(e.target.value);
-          setName(e.target.value);
-        }}
-      />
-      <TextField
-        id="filled-basic"
-        label="Amount"
-        onChange={(e) => {
-          setAmount(e.target.value);
-        }}
-      />
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <DatePicker
-          variant="inline"
-          label="Date: "
-          value={date}
-          onChange={(e) => setDate(date)}
+  function loadList(listType){
+    return(
+      listType.map((list) => {
+        return <ListSubheader>{list}</ListSubheader>
+        list.map((subList) => {
+          return <MenuItem value={subList}>{subList}</MenuItem>
+        });
+      })
+    );
+  }
+
+  if (isAuth == true) {
+    // const classes = useStyles();
+    return (
+      <form noValidate autoComplete="off" onSubmit={onSubmit}>
+        <TextField
+          id="standard-basic"
+          label="Description"
+          onChange={(e) => {
+            console.log(e.target.value);
+            setDescription(e.target.value);
+          }}
         />
-      </MuiPickersUtilsProvider>
-      <Autocomplete
-        id="category-select"
-        style={{ width: 200 }}
-        freeSolo
-        options={categoryList}
-        renderInput={(params) => (
-          <TextField {...params} label="Category" variant="outlined" onChange={(e) => setCategory(e.target.value)} />
-        )}
-      />
-      <Button color="primary" variant="contained" type="submit">
-        Add
-      </Button>
-    </form>
-  );
+        <TextField
+          id="filled-basic"
+          label="Amount"
+          onChange={(e) => {
+            setAmount(e.target.value);
+          }}
+        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <DatePicker
+            variant="inline"
+            label="Date: "
+            value={date}
+            onChange={(e) => setDate(date)}
+          />
+        </MuiPickersUtilsProvider>
+
+        <FormControl>
+        <InputLabel htmlFor="category-select">Category</InputLabel>
+        <Select defaultValue="" id="category-select">
+          {loadList(categoryList)}
+        </Select>
+      </FormControl>
+
+      <FormControl>
+        <InputLabel htmlFor="payment-select">Account</InputLabel>
+        <Select defaultValue="" id="payment-select">
+          {loadList(paymentList)}
+        </Select>
+      </FormControl>
+
+        <Button color="primary" variant="contained" type="submit">
+          Add
+        </Button>
+      </form>
+    );
+  } else {
+    return <Redirect to="/login" />;
+  }
 };
 
 export default CreateTransaction;

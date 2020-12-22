@@ -3,30 +3,37 @@ import Axios from "axios";
 import { DataGrid } from "@material-ui/data-grid";
 import { Redirect } from "react-router-dom";
 
-const TransactionList = ({ isAuth }) => {
+const TransactionList = ({ isAuth, username, filter}) => {
   const [transaction, setTransaction] = useState([]);
 
   const columns = [
     { field: "date", headerName: "Date", width: 130 },
     { field: "description", headerName: "Description", width: 130 },
     { field: "amount", headerName: "Amount", width: 130 },
+    { field: "category", headerName:"Category", width: 130},
+    { field: "account", headerName: "Account", width: 130}
   ];
 
   const tempRow = [{ id: 1, description: "" }];
 
   useEffect(() => {
+    var index = 0;
     if (isAuth == true) {
-      Axios.get("http://localhost:5000/transactions",{withCredentials: true})
+      Axios.post("http://localhost:5000/transactions",{username: username},{withCredentials: true})
         .then((res) => {
           res.data.map((trans) => {
+            console.log(trans);
             const modifiedTrans = {
-              id: trans._id,
+              id: index,
               description: trans.description,
               amount: trans.amount,
-              date: trans.date.substring(0, 10),
+              date: trans.date,//.substring(0, 10), temp, date is not date obj in db add substring back when proper date is used.
+              category: trans.subCategory,
+              account: trans.subPayment
             };
             setTransaction((transaction) => [...transaction, modifiedTrans]);
             console.log(transaction);
+            index++;
           });
         })
         .catch((err) => {

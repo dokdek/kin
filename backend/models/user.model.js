@@ -12,17 +12,16 @@ const userSchema = new Schema ({
     },
     categories: {
         type: Array,
-        required: true,
-        minlength: true,
-        trim: true,
         unique: true
     },
     paymentType: {
         type: Array,
-        required: true,
-        minlength: true,
-        trim: true,
         unique: true
+    },
+    transactions: {
+        type: Array,
+        unique: true,
+        //timestamps: true
     }
 }, {
     timestamps: true

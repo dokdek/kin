@@ -7,6 +7,7 @@ const loginRouter = require('./routes/login');
 const authRouter = require('./routes/auth');
 const expressjwt = require('express-jwt');
 const cookieParser = require('cookie-parser');
+
 require('dotenv').config();
 
 const app = express();
@@ -32,7 +33,7 @@ app.use('/transactions', transactionsRouter);
 
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true});
 connection.once('open', () => {
-    console.log('MongoDB connect established.')
+    console.log('MongoDB connection established.')
 })
 
 

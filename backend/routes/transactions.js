@@ -1,12 +1,32 @@
 const router = require('express').Router();
-let Transaction = require('../models/transaction.model');
+const Transaction = require('../models/transaction.model');
+const User = require('../models/user.model');
 
-router.route('/').get((req, res) => {
-    Transaction.find().sort({"date": -1})
-        .then(transactions => res.json(transactions))
-        .catch(err => res.status(400).json('Error: '+ err));
+//CONSIDER MOVING EVERYTHING TO USER ROUTE?
+
+//Helper
+function dateCompare(a,b){
+    if (a.date > a.date){
+        return 1;
+    }else if(a.date < b.date){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
+router.route('/').post((req, res) => {
+    User.findOne({username: req.body.username},(err, user) => {
+        if(err){
+            res.send(err);
+        }else {
+            res.json(user.transactions.sort(dateCompare)); 
+        }
+    });
 });
 
+
+//Need to send user along with transaction to add to specific user. Can send it as a field inside the transaction object, take the ID?
 router.route('/add').post((req, res) => {
     const description = req.body.description;
     const username = req.body.username;
@@ -14,17 +34,23 @@ router.route('/add').post((req, res) => {
     const date = Date.parse(req.body.date);
     const category = req.body.category;
     const paymentType = req.body.paymentType;
-    const newTransaction = new Transaction({
-        username,
-        description,
-        amount,
-        date,
-        category,
-        paymentType
+    const newTransaction = { //Create a normal object with removed ID
+        description: description,
+        amount: amount,
+        date: date,
+        subCategory: category,
+        subPayment: paymentType
+    };
+    User.findOne({username: username},(err, user) => {
+        if(err){
+            res.send(err);
+        }else {
+            user.transactions.push(newTransaction);
+            user.save()
+                .then(()=>res.json("Success"))
+                .catch(err => res.status(400).json("Error: " + err));
+        }
     });
-    newTransaction.save()
-        .then(() => res.json('Transaction added'))
-        .catch(err => res.status(400).json('Error: ' + err));
 })
 
 router.route('/:id').get((req,res) => {

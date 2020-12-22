@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {TextField, Button} from "@material-ui/core";
 import Axios from "axios";
-import { Redirect } from "react-router-dom";
-const auth = require('../firebase/create-user');
+import { useHistory } from "react-router-dom";
+import jwtDecode from 'jwt-decode';
 
-
-
-const Login = () => {
+const Login = ({setUsername}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
 
   function onSubmit(e) {
     e.preventDefault();
     
     const user = {
-      email: 'dokdek@test.com',
-      password: '!wsadsadas233534',
+      email: 'test@admin.com',
+      password: '1234567',
       returnSecureToken: true
     }
     Axios.post("http://localhost:5000/login/login", user, {withCredentials: true})
     .then(res => {
-      setEmail("login success")
+      console.log("login ok")
+      setUsername(jwtDecode(res.data).username);
+      history.push("/list");
      } )
     .catch(error => {
       if (error.response) {
