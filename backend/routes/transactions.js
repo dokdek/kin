@@ -15,12 +15,21 @@ function dateCompare(a,b){
     }
 }
 
+//Route broken, 
 router.route('/').post((req, res) => {
     User.findOne({username: req.body.username},(err, user) => {
+        console.log(req.body.username);
         if(err){
-            res.send(err);
-        }else {
-            res.json(user.transactions.sort(dateCompare)); 
+            res.status(400).json("Error: no result found");
+        }else if(user){
+            const type = req.body.filter.type;
+            let filteredTrans = [];
+            user.transactions.map((trans) => {
+                if(trans[type] == req.body.filter.name){
+                    filteredTrans.push(trans);
+                }
+            });
+            res.json(filteredTrans.sort(dateCompare)); 
         }
     });
 });
@@ -31,7 +40,7 @@ router.route('/add').post((req, res) => {
     const description = req.body.description;
     const username = req.body.username;
     const amount = Number(req.body.amount);
-    const date = Date.parse(req.body.date);
+    const date = Date(req.body.date);
     const category = req.body.category;
     const paymentType = req.body.paymentType;
     const newTransaction = { //Create a normal object with removed ID

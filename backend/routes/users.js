@@ -54,7 +54,11 @@ router.route('/addSubCategory').post((req,res) => {
             res.status(400).json("Error: no result found");
         }else if(user){
             console.log(user.categories[0]);
-            user.categories[user.categories.findIndex((category) => category.category === req.body.category)].subCategories.push(req.body.subCategory); //Finds index of main cat, then push subcat to maincat
+            const newSubCat = {
+                name: req.body.subCategory,
+                budgeted: 0
+            }
+            user.categories[user.categories.findIndex((category) => category.category === req.body.category)].subCategories.push(newSubCat); //Finds index of main cat, then push subcat to maincat
             user.markModified("categories"); //Due to nested object, need to specify what property was changed for mongoose to save.
             user.save()
                 .then(()=>res.json("Success"))
@@ -89,11 +93,28 @@ router.route('/addSubPayment').post((req,res) => {
         if(err){
             res.status(400).json("Error: no result found");
         }else if(user){
-            console.log(user.paymentType[0]);
             user.paymentType[user.paymentType.findIndex((payment) => payment.payment === req.body.payment)].subPayments.push(req.body.subPayment); //Finds index of main cat, then push subcat to maincat
             user.markModified("paymentType")
             user.save()
                 .then(()=>res.json("Success"))
+                .catch(err=>res.status(400).json("Error: " + err));
+        }else{
+            res.status(400).json("Error: no result found");
+        }
+    })
+})
+
+router.route('/updateBudgeted').post((req,res) => {
+    User.findOne({username: req.body.username}, (err, user)=>{
+        if(err){
+            res.status(400).json("Error: no result found");
+        }else if(user){
+            const catIndex = user.categories.findIndex((category) => category.category === req.body.category);
+            const subCatIndex = user.categories[catIndex].subCategories.findIndex((subCat) => subCat.name === req.body.subCategory);
+            user.categories[catIndex].subCategories[subCatIndex].budgeted[0].amount = req.body.amount; //Need to implement month/year search
+            user.markModified("categories");
+            user.save()
+                .then(()=> res.json("Success"))
                 .catch(err=>res.status(400).json("Error: " + err));
         }else{
             res.status(400).json("Error: no result found");

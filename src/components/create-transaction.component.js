@@ -13,12 +13,15 @@ import Axios from "axios";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import { Redirect } from "react-router-dom";
+import getLists from './helpers/getLists';
+import renderCategorySelectGroup from './helpers/renderCategorySelectGroup';
+import renderPaymentSelectGroup from './helpers/renderPaymentSelectGroup';
 
-const useStyles = makeStyles(() => ({
-  FormStyle: {
-    marginLeft: "10%",
-  },
-}));
+
+const useStyles = makeStyles((theme) => ({
+  toolbar: theme.mixins.toolbar
+}))
+
 
 const CreateTransaction = ({ isAuth, username }) => {
   const [description, setDescription] = useState("");
@@ -29,47 +32,11 @@ const CreateTransaction = ({ isAuth, username }) => {
   const [paymentList, setPaymentList] = useState([]);
   const [payment, setPayment] = useState("");
 
-  useEffect(() => {
-    getLists();
-  }, []);
+  const classes = useStyles();
 
-  function getLists() {
-    const user = { username: username };
-    Axios.post("http://localhost:5000/users/getCategory", user, {
-      withCredentials: true,
-    })
-      .then((response) => {
-        if (response.data !== "") {
-          setCategoryList(response.data);
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.data);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-      });
-    Axios.post("http://localhost:5000/users/getPayment", user, {
-      withCredentials: true,
-    })
-      .then((response) => {
-        if (response.data !== "") {
-          setPaymentList(response.data);
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.data);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-      });
-  }
+  useEffect(() => {
+    getLists(username, setCategoryList, setPaymentList);
+  }, []);
 
   function onSubmit(e) {
     e.preventDefault();
@@ -98,33 +65,11 @@ const CreateTransaction = ({ isAuth, username }) => {
     console.log(transaction);
   }
 
-  //Renders the select group, iterates through the categories and sub categories, returns an array
-  //of the main category, followed by its subcategories. React renders array via index, so subheader first, then all menu items.
-  function renderCategorySelectGroup(item) {
-    const items = item.subCategories.map((value, index) => {
-      return (
-        <MenuItem key={index} value={value}>
-          {value}
-        </MenuItem>
-      );
-    });
-    return [<ListSubheader>{item.category}</ListSubheader>, items];
-  }
-
-  function renderPaymentSelectGroup(item) {
-    const items = item.subPayments.map((value, index) => {
-      return (
-        <MenuItem key={index} value={value}>
-          {value}
-        </MenuItem>
-      );
-    });
-    return [<ListSubheader>{item.payment}</ListSubheader>, items];
-  }
-
   if (isAuth == true) {
     // const classes = useStyles();
     return (
+      <div>
+        <div className={classes.toolbar}/>
       <form noValidate autoComplete="off" onSubmit={onSubmit}>
         <TextField
           id="standard-basic"
@@ -142,10 +87,10 @@ const CreateTransaction = ({ isAuth, username }) => {
         />
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <DatePicker
-            variant="inline"
             label="Date: "
             value={date}
-            onChange={(e) => setDate(date)}
+            autoOk={true}
+            onChange={(e,date) => setDate(e)}
           />
         </MuiPickersUtilsProvider>
         <FormControl>
@@ -158,7 +103,7 @@ const CreateTransaction = ({ isAuth, username }) => {
             }}
             id="category-select"
           >
-            {categoryList.map((cat) => renderCategorySelectGroup(cat))} {/*Passes each cat through the render function, read above*/}
+            {categoryList.map((cat) => renderCategorySelectGroup(cat, ListSubheader, MenuItem))} {/*Passes each cat through the render function, read above*/}
           </Select>
         </FormControl>
         <FormControl>
@@ -171,13 +116,14 @@ const CreateTransaction = ({ isAuth, username }) => {
             }}
             id="payment-select"
           >
-            {paymentList.map((payment) => renderPaymentSelectGroup(payment))} {/*Passes each pmt through the render function, read above*/}
+            {paymentList.map((payment) => renderPaymentSelectGroup(payment, ListSubheader, MenuItem))} {/*Passes each pmt through the render function, read above*/}
           </Select>
         </FormControl>
         <Button color="primary" variant="contained" type="submit">
           Add
         </Button>
       </form>
+      </div>
     );
   } else {
     return <Redirect to="/login" />;

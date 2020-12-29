@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import { DataGrid } from "@material-ui/data-grid";
 import { Redirect } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
 
-const TransactionList = ({ isAuth, username, filter}) => {
+const useStyles = makeStyles((theme) => ({
+  toolbar: theme.mixins.toolbar
+}))
+
+
+const TransactionList = ({ isAuth, username, filterValue}) => {
+
+  const classes = useStyles();
+
   const [transaction, setTransaction] = useState([]);
 
   //Need to change widths
@@ -15,18 +24,22 @@ const TransactionList = ({ isAuth, username, filter}) => {
     { field: "account", headerName: "Account", width: 130}
   ];
 
-  const tempRow = [{ id: 1, description: "" }];
 
   useEffect(() => {
+    //Extract to external function, duplicated in category list component
     if (isAuth == true) {
-      Axios.post("http://localhost:5000/transactions",{username: username},{withCredentials: true})
+      const user = {
+        username: username,
+        filter: filterValue
+      }
+      Axios.post("http://localhost:5000/transactions",user,{withCredentials: true})
         .then((res) => {
-          res.data.map((trans, index) => {
+          res.data.map((trans, index) => { //maybe try setTrans (res.data.map(trans......)) since map returns an array anyways...
             const modifiedTrans = {
               id: index,
               description: trans.description,
               amount: trans.amount,
-              date: trans.date,//.substring(0, 10), temp, date is not date obj in db add substring back when proper date is used.
+              date: trans.date, //Format date after
               category: trans.subCategory,
               account: trans.subPayment
             };
@@ -41,7 +54,8 @@ const TransactionList = ({ isAuth, username, filter}) => {
 
   if (isAuth == true) {
     return (
-      <div style={{ height: 400, width: "100%" }}>
+      <div style={{height: window.innerHeight-64, width: window.innerWidth }}> {/*64 is height of toolbar, is fixed */}
+        <div className={classes.toolbar}/>
         <DataGrid rows={transaction} columns={columns} checkboxSelection />
       </div>
     );

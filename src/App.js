@@ -1,59 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-//import './assets/main.css';
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Navbar from "./components/navbar.component";
 import TransactionList from "./components/transaction-list.component";
 import CreateTransaction from "./components/create-transaction.component";
 import CreateUser from "./components/create-user.component";
-import UpdateTransaction from "./components/update-transaction.component";
 import Login from "./components/login";
-import Axios from "axios";
-import jwtDecode from 'jwt-decode';
+import {makeStyles} from '@material-ui/styles';
+import CategoryList from "./components/category-list.component";
+import checkAuth from "./components/helpers/checkAuth"
+
+
+const useStyles = makeStyles((theme)=> ({
+  //toolbar: theme.mixins.toolbar
+}))
+
 
 function App() {
   const [auth, setAuth] = useState(false);
   const [username, setUsername] = useState("");
+  const [filterValue, setFilterValue] = useState({});
 
   useEffect(() => {
-    checkAuth();
+    checkAuth(setAuth, setUsername);
   }, []);
 
-  function checkAuth() {
-    Axios.get("http://localhost:5000/auth", { withCredentials: true })
-      .then((res) => {
-        console.log(res.data);
-        setAuth(res.data.auth);
-        setUsername(jwtDecode(res.data.token).username);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.data);
-          setAuth(false);
-        } else if (error.request) {
-          console.log(error.request);
-          setAuth(false);
-        } else {
-          console.log("Error", error.message);
-          setAuth(false);
-        }
-      });
-  }
+  const classes = useStyles();
+  
   return (
+    <div style={{display: 'flex'}}>
     <Router>
-      <Navbar />
+      {auth && <Navbar username={"SyzFuhJ7ynRikOHR4eM8cOHR0KT2"} setFilterValue={setFilterValue}/>} {/*Hides navbar if auth is false */}
       <Route
         path="/login"
-        render={(props) => <Login {...props} setUsername={setUsername} />} //sends setUsername hook down to child to update parent state.
+        render={(props) => <Login {...props} setUsername={setUsername} isAuth={auth}/>} //sends setUsername hook down to child to update parent state.
       />
       <Route
         path="/list"
-        render={(props) => <TransactionList {...props} isAuth={auth} username={username} />}
+        render={(props) => <TransactionList key={filterValue.name}{...props} isAuth={auth} username={username} filterValue={filterValue} />}
       />
-      <Route path="/update/:id" component={UpdateTransaction} />
       <Route path="/newTransaction" 
       render={(props) => <CreateTransaction {...props} isAuth={auth} username={username}/>}/>
       <Route path="/signup" component={CreateUser} />
+      <Route path="/catlist" 
+      render={(props)=> <CategoryList {...props} isAuth={auth} username={username}/>}/>
     </Router>
+    </div>
   );
 }
 
