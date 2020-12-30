@@ -21,6 +21,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import getLists from './helpers/getLists';
 import renderCategorySelectGroup from './helpers/renderCategorySelectGroup';
 import renderPaymentSelectGroup from './helpers/renderPaymentSelectGroup';
+import CreateTransaction from './create-transaction.component';
 
 const drawerWidth = 240;
 
@@ -64,13 +65,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({isAuth, username, setFilterValue}) => {
+const Navbar = ({ username, setFilterValue}) => {
   const theme = useTheme();
   const classes = useStyles();
 
   const [categoryList, setCategoryList] = useState([]);
   const [paymentList, setPaymentList] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [addTransOpen, setAddTransOpen] = useState(false);
+
 
   useEffect(() => {
     getLists(username, setCategoryList, setPaymentList);
@@ -152,8 +155,8 @@ const Navbar = ({isAuth, username, setFilterValue}) => {
           <Typography variant="h6" noWrap>
             Title
           </Typography>
-          <Button component={Link} to="/newTransaction">
-            Add
+          <Button onClick={()=>setAddTransOpen(true)}>
+            Add Transaction
           </Button>
           <Button component={Link} to="/signup">
             New User
@@ -190,6 +193,7 @@ const Navbar = ({isAuth, username, setFilterValue}) => {
           </Drawer>
         </Hidden>
       </nav>
+      <CreateTransaction username={username} open={addTransOpen} setOpen={setAddTransOpen}/>
     </div>
   );
 };

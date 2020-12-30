@@ -8,22 +8,29 @@ import {
   FormControl,
   Select,
   InputLabel,
+  Modal,
 } from "@material-ui/core";
 import Axios from "axios";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import { Redirect } from "react-router-dom";
-import getLists from './helpers/getLists';
-import renderCategorySelectGroup from './helpers/renderCategorySelectGroup';
-import renderPaymentSelectGroup from './helpers/renderPaymentSelectGroup';
-
+import getLists from "./helpers/getLists";
+import renderCategorySelectGroup from "./helpers/renderCategorySelectGroup";
+import renderPaymentSelectGroup from "./helpers/renderPaymentSelectGroup";
 
 const useStyles = makeStyles((theme) => ({
-  toolbar: theme.mixins.toolbar
-}))
+  toolbar: theme.mixins.toolbar,
+  paper: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
-
-const CreateTransaction = ({ isAuth, username }) => {
+const CreateTransaction = ({ isAuth, username, open, setOpen }) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
@@ -65,69 +72,79 @@ const CreateTransaction = ({ isAuth, username }) => {
     console.log(transaction);
   }
 
-  if (isAuth == true) {
+  const handleClose = () => {
+    setOpen(false);
+  };
     // const classes = useStyles();
     return (
-      <div>
-        <div className={classes.toolbar}/>
-      <form noValidate autoComplete="off" onSubmit={onSubmit}>
-        <TextField
-          id="standard-basic"
-          label="Description"
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-        />
-        <TextField
-          id="filled-basic"
-          label="Amount"
-          onChange={(e) => {
-            setAmount(e.target.value);
-          }}
-        />
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <DatePicker
-            label="Date: "
-            value={date}
-            autoOk={true}
-            onChange={(e,date) => setDate(e)}
-          />
-        </MuiPickersUtilsProvider>
-        <FormControl>
-          <InputLabel id="category-select">Category</InputLabel>
-          <Select
-            labelId="category-select"
-            value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
-            }}
-            id="category-select"
-          >
-            {categoryList.map((cat) => renderCategorySelectGroup(cat, ListSubheader, MenuItem))} {/*Passes each cat through the render function, read above*/}
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="payment-select">Account</InputLabel>
-          <Select
-            labelId="payment-select"
-            value={payment}
-            onChange={(e) => {
-              setPayment(e.target.value);
-            }}
-            id="payment-select"
-          >
-            {paymentList.map((payment) => renderPaymentSelectGroup(payment, ListSubheader, MenuItem))} {/*Passes each pmt through the render function, read above*/}
-          </Select>
-        </FormControl>
-        <Button color="primary" variant="contained" type="submit">
-          Add
-        </Button>
-      </form>
-      </div>
+      <Modal open={open} onClose={handleClose}>
+        <div style={{
+    top: `50%`,
+    left: `50%`,
+    transform: `translate(-50%, -50%)`,
+        }}className={classes.paper}>
+          <form noValidate autoComplete="off" onSubmit={onSubmit}>
+            <TextField
+              id="standard-basic"
+              label="Description"
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
+            />
+            <TextField
+              id="filled-basic"
+              label="Amount"
+              onChange={(e) => {
+                setAmount(e.target.value);
+              }}
+            />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <DatePicker
+                label="Date: "
+                value={date}
+                autoOk={true}
+                onChange={(e, date) => setDate(e)}
+              />
+            </MuiPickersUtilsProvider>
+            <FormControl>
+              <InputLabel id="category-select">Category</InputLabel>
+              <Select
+                labelId="category-select"
+                value={category}
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                }}
+                id="category-select"
+              >
+                {categoryList.map((cat) =>
+                  renderCategorySelectGroup(cat, ListSubheader, MenuItem)
+                )}{" "}
+                {/*Passes each cat through the render function, read above*/}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel id="payment-select">Account</InputLabel>
+              <Select
+                labelId="payment-select"
+                value={payment}
+                onChange={(e) => {
+                  setPayment(e.target.value);
+                }}
+                id="payment-select"
+              >
+                {paymentList.map((payment) =>
+                  renderPaymentSelectGroup(payment, ListSubheader, MenuItem)
+                )}{" "}
+                {/*Passes each pmt through the render function, read above*/}
+              </Select>
+            </FormControl>
+            <Button color="primary" variant="contained" type="submit">
+              Add
+            </Button>
+          </form>
+        </div>
+      </Modal>
     );
-  } else {
-    return <Redirect to="/login" />;
-  }
 };
 
 export default CreateTransaction;

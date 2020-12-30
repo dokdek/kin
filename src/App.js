@@ -38,8 +38,6 @@ function App() {
         path="/list"
         render={(props) => <TransactionList key={filterValue.name}{...props} isAuth={auth} username={username} filterValue={filterValue} />}
       />
-      <Route path="/newTransaction" 
-      render={(props) => <CreateTransaction {...props} isAuth={auth} username={username}/>}/>
       <Route path="/signup" component={CreateUser} />
       <Route path="/catlist" 
       render={(props)=> <CategoryList {...props} isAuth={auth} username={username}/>}/>
