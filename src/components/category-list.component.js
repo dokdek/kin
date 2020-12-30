@@ -144,11 +144,13 @@ const CategoryList = () => {
       })
       .catch((err) => {
         console.log(err);
+        setAuth(false);
+        isMounted = false;
       });
       return () => {
         isMounted = false;
       }
-  }, [username, auth]);
+  }, [auth]);
 
   if (auth === true) {
     return (
