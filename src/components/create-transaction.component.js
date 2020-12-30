@@ -16,6 +16,7 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import getLists from "./helpers/getLists";
 import renderCategorySelectGroup from "./helpers/renderCategorySelectGroup";
 import renderPaymentSelectGroup from "./helpers/renderPaymentSelectGroup";
+import NumberFormat from 'react-number-format';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -28,6 +29,26 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
 }));
+
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      isNumericString
+      prefix="$"
+    />
+  );
+}
 
 const CreateTransaction = ({ username, open, setOpen }) => {
   const [description, setDescription] = useState("");
@@ -48,6 +69,8 @@ const CreateTransaction = ({ username, open, setOpen }) => {
     console.log(category);
     if((description.length > 0) && amount && (payment.length > 0) && (category.length > 0)){
       setFormValidated(false);
+    }else{
+      setFormValidated(true);
     }
   }
 
@@ -85,6 +108,8 @@ const CreateTransaction = ({ username, open, setOpen }) => {
     console.log(transaction);
   }
 
+
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -112,10 +137,13 @@ const CreateTransaction = ({ username, open, setOpen }) => {
           <TextField
             id="filled-basic"
             label="Amount"
+            value={amount}
             onChange={(e) => {
               setAmount(e.target.value)
+            }}            
+            InputProps={{
+              inputComponent: NumberFormatCustom
             }}
-            required={true}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
