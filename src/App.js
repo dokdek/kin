@@ -30,7 +30,6 @@ function App() {
   }, []);
 
   const classes = useStyles();
-
   return (
     <div style={{ display: "flex" }}>
       <Router>
@@ -62,10 +61,8 @@ function App() {
         <Route path="/signup" component={CreateUser} />
         <Route
           path="/catlist"
-          render={(props) => (
-            <CategoryList {...props} isAuth={auth} username={username} />
-          )}
-        />
+          component={CategoryList}/>
+        {!auth && <Redirect to="/login"/>}
       </Router>
     </div>
   );
