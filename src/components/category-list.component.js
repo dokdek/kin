@@ -12,6 +12,7 @@ import {
   TableBody,
   TextField,
 } from "@material-ui/core";
+import checkAuth from "./helpers/checkAuth";
 
 //NEED TO ADD DATE SORTING/FILTER
 
@@ -46,11 +47,13 @@ function getCategoryList(username, setCategoryList) {
     });
 }
 
-const CategoryList = ({ isAuth, username }) => {
+const CategoryList = () => {
   const classes = useStyles();
 
   let tempCat = {}; //used for pushing updated budget to backend.
   const [categoryList, setCategoryList] = useState([]);
+  const [auth, setAuth] = useState();
+  const [username, setUsername] = useState("");
 
   function updateCategory(category, subCategory, value) {
     tempCat = {
@@ -129,10 +132,19 @@ const CategoryList = ({ isAuth, username }) => {
   ];
 
   useEffect(() => {
-    getCategoryList(username, setCategoryList);
-  }, []);
+    checkAuth()
+    .then((user) => {
+    console.log(user.auth);
+      setUsername(user.username.username);
+      setAuth(user.auth);
+      getCategoryList(username, setCategoryList);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }, [username, auth]);
 
-  if (isAuth == true) {
+  if (auth === true) {
     return (
       <div
         style={{ height: window.innerHeight - 64, width: window.innerWidth }}
@@ -165,8 +177,10 @@ const CategoryList = ({ isAuth, username }) => {
         </Paper>
       </div>
     );
-  } else {
+  } else if (auth === false) {
     return <Redirect to="/login" />;
+  } else {
+    return null;
   }
 };
 export default CategoryList;

@@ -1,25 +1,29 @@
-import Axios from 'axios';
-import jwtDecode from 'jwt-decode';
+import Axios from "axios";
+import jwtDecode from "jwt-decode";
 
-
-
-export default function checkAuth(setAuth, setUsername) {
+const checkAuth = () => {
+  return new Promise(function (resolve, reject) {
     Axios.get("http://localhost:5000/auth", { withCredentials: true })
       .then((res) => {
         console.log(res.data);
-        setAuth(res.data.auth);
-        setUsername(jwtDecode(res.data.token).username);
+        const user = {
+          username: jwtDecode(res.data.token),
+          auth: true,
+        };
+        resolve(user);
       })
       .catch((error) => {
         if (error.response) {
           console.log(error.response.data);
-          setAuth(false);
+          reject(false);
         } else if (error.request) {
           console.log(error.request);
-          setAuth(false);
+          reject(false);
         } else {
           console.log("Error", error.message);
-          setAuth(false);
+          reject(false);
         }
       });
-  }
+  });
+};
+export default checkAuth;
