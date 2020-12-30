@@ -19,8 +19,6 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import getLists from './helpers/getLists';
-import renderCategorySelectGroup from './helpers/renderCategorySelectGroup';
-import renderPaymentSelectGroup from './helpers/renderPaymentSelectGroup';
 import CreateTransaction from './create-transaction.component';
 
 const drawerWidth = 240;

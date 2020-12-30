@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(null);
   const [username, setUsername] = useState("");
   const [filterValue, setFilterValue] = useState({});
 
@@ -62,7 +62,8 @@ function App() {
         <Route
           path="/catlist"
           component={CategoryList}/>
-        {!auth && <Redirect to="/login"/>}
+        {(auth === false) && <Redirect to="/login"/>}
+        {auth && <Redirect from='/' to='/catlist'/>}
       </Router>
     </div>
   );

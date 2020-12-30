@@ -3,17 +3,20 @@ import Axios from "axios";
 import { DataGrid } from "@material-ui/data-grid";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
+import checkAuth from './helpers/checkAuth';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar
 }))
 
 
-const TransactionList = ({ isAuth, username, filterValue}) => {
+const TransactionList = ({filterValue}) => {
 
   const classes = useStyles();
 
   const [transaction, setTransaction] = useState([]);
+  const [auth, setAuth] = useState();
+
 
   //Need to change widths
   const columns = [
@@ -26,33 +29,37 @@ const TransactionList = ({ isAuth, username, filterValue}) => {
 
 
   useEffect(() => {
-    //Extract to external function, duplicated in category list component
-    if (isAuth == true) {
+    checkAuth()
+    .then((res) => {
+      setAuth(res.auth);    
       const user = {
-        username: username,
+        username: res.username.username,
         filter: filterValue
       }
       Axios.post("http://localhost:5000/transactions",user,{withCredentials: true})
-        .then((res) => {
-          res.data.map((trans, index) => { //maybe try setTrans (res.data.map(trans......)) since map returns an array anyways...
-            const modifiedTrans = {
-              id: index,
-              description: trans.description,
-              amount: trans.amount,
-              date: trans.date, //Format date after
-              category: trans.subCategory,
-              account: trans.subPayment
-            };
-            setTransaction((transaction) => [...transaction, modifiedTrans]);
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+      .then((res) => {
+        res.data.map((trans, index) => { //maybe try setTrans (res.data.map(trans......)) since map returns an array anyways...
+          const modifiedTrans = {
+            id: index,
+            description: trans.description,
+            amount: trans.amount,
+            date: trans.date, //Format date after
+            category: trans.subCategory,
+            account: trans.subPayment
+          };
+          setTransaction((transaction) => [...transaction, modifiedTrans]);
         });
-    }
-  }, []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  }, [auth]);
 
-  if (isAuth == true) {
+  if (auth === true) {
     return (
       <div style={{height: window.innerHeight-64, width: window.innerWidth }}> {/*64 is height of toolbar, is fixed */}
         <div className={classes.toolbar}/>

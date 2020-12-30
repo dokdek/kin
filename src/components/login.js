@@ -29,7 +29,7 @@ const Login = ({ setUsername, isAuth}) => {
     })
       .then((res) => {
         setUsername(jwtDecode(res.data).username);
-        history.push("/catlist");
+        history.push("/");
       })
       .catch((error) => {
         if (error.response) {
@@ -57,7 +57,7 @@ const Login = ({ setUsername, isAuth}) => {
   );
   }else{
     return(
-      <Redirect to="/catlist"/>
+      <Redirect to="/"/>
     )
   }
 };
