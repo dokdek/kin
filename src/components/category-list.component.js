@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 function getCategoryList(username, setCategoryList) {
   const user = { username: username };
   Axios.post("http://localhost:5000/users/getCategory", user, {
@@ -132,14 +133,15 @@ const CategoryList = () => {
   ];
 
   useEffect(() => {
-      let isMounted = true; //Fixes react warning memory leak
+    let isMounted = true; //Fixes react warning memory leak
     checkAuth()
       .then((user) => {
-        console.log(user.auth);
-        if(isMounted){
-        setUsername(user.username.username);
-        setAuth(user.auth);
-        getCategoryList(username, setCategoryList);
+        if (isMounted) {
+          setUsername(user.username.username);
+          setAuth(user.auth);
+          console.log(auth);
+          console.log(username);
+          getCategoryList(username, setCategoryList);
         }
       })
       .catch((err) => {
@@ -147,10 +149,10 @@ const CategoryList = () => {
         setAuth(false);
         isMounted = false;
       });
-      return () => {
-        isMounted = false;
-      }
-  }, [auth]);
+    return () => {
+      isMounted = false;
+    };
+  },[username, auth]);
 
   if (auth === true) {
     return (
