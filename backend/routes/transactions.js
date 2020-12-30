@@ -15,7 +15,6 @@ function dateCompare(a,b){
     }
 }
 
-//Route broken, 
 router.route('/').post((req, res) => {
     User.findOne({username: req.body.username},(err, user) => {
         console.log(req.body.username);
@@ -52,12 +51,14 @@ router.route('/add').post((req, res) => {
     };
     User.findOne({username: username},(err, user) => {
         if(err){
-            res.send(err);
-        }else {
+            res.status(400).json("Error: no result found");
+        }else if(user) {
             user.transactions.push(newTransaction);
             user.save()
                 .then(()=>res.json("Success"))
                 .catch(err => res.status(400).json("Error: " + err));
+        }else {
+            res.status(400).json("Error: no result found");
         }
     });
 })
