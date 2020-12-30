@@ -132,16 +132,22 @@ const CategoryList = () => {
   ];
 
   useEffect(() => {
+      let isMounted = true; //Fixes react warning memory leak
     checkAuth()
-    .then((user) => {
-    console.log(user.auth);
-      setUsername(user.username.username);
-      setAuth(user.auth);
-      getCategoryList(username, setCategoryList);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((user) => {
+        console.log(user.auth);
+        if(isMounted){
+        setUsername(user.username.username);
+        setAuth(user.auth);
+        getCategoryList(username, setCategoryList);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      return () => {
+        isMounted = false;
+      }
   }, [username, auth]);
 
   if (auth === true) {
