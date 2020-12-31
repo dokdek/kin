@@ -17,6 +17,7 @@ function App() {
   const [auth, setAuth] = useState(null);
   const [username, setUsername] = useState("");
   const [filterValue, setFilterValue] = useState({});
+  const [forceReload, setForceReload] = useState(false);
 
   useEffect(() => {
     checkAuth()
@@ -38,6 +39,8 @@ function App() {
           <Navbar
             username={"SyzFuhJ7ynRikOHR4eM8cOHR0KT2"}
             setFilterValue={setFilterValue}
+            setForceReload={setForceReload}
+            forceReload={forceReload}
           />
         )}{" "}
         {/*Hides navbar if auth is false */}
@@ -53,16 +56,16 @@ function App() {
             <TransactionList
               key={filterValue.name}
               {...props}
-              isAuth={auth}
-              username={username}
               filterValue={filterValue}
+              forceReload={forceReload}
             />
           )}
         />
         <Route path="/signup" component={CreateUser} />
         <Route
           path="/catlist"
-          component={CategoryList}/>
+          render ={(props) => (
+            <CategoryList {...props} key={forceReload}/>)}/>
         {(auth === false) && <Redirect to="/login"/>}
         {auth && <Redirect from='/' to='/catlist'/>}
       </Router>

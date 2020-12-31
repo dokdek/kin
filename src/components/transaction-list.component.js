@@ -14,7 +14,7 @@ function dateParser(date){
   return (newDate.getMonth()+1) + "/" + newDate.getDate() + "/" + newDate.getFullYear();
 }
 
-const TransactionList = ({ filterValue }) => {
+const TransactionList = ({ filterValue, forceReload }) => {
   const classes = useStyles();
 
   const [transaction, setTransaction] = useState([]);
@@ -44,6 +44,7 @@ const TransactionList = ({ filterValue }) => {
           })
             .then((res) => {
               console.log("fetching transactions");
+              setTransaction([]); //clear current trans if leftover from state.
               res.data.map((trans, index) => {
                 //maybe try setTrans (res.data.map(trans......)) since map returns an array anyways...
                 let newDate = dateParser(trans.date);
@@ -74,7 +75,7 @@ const TransactionList = ({ filterValue }) => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [forceReload]);
 
   if (auth === true) {
     return (

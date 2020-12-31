@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ username, setFilterValue}) => {
+const Navbar = ({ username, setFilterValue, setForceReload, forceReload}) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -191,7 +191,7 @@ const Navbar = ({ username, setFilterValue}) => {
           </Drawer>
         </Hidden>
       </nav>
-      <CreateTransaction username={username} open={addTransOpen} setOpen={setAddTransOpen}/>
+      <CreateTransaction username={username} open={addTransOpen} setOpen={setAddTransOpen} setForceReload={setForceReload} forceReload={forceReload}/>
     </div>
   );
 };

@@ -17,6 +17,7 @@ import getLists from "./helpers/getLists";
 import renderCategorySelectGroup from "./helpers/renderCategorySelectGroup";
 import renderPaymentSelectGroup from "./helpers/renderPaymentSelectGroup";
 import NumberFormat from 'react-number-format';
+import { set } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -50,7 +51,7 @@ function NumberFormatCustom(props) {
   );
 }
 
-const CreateTransaction = ({ username, open, setOpen }) => {
+const CreateTransaction = ({ username, open, setOpen, setForceReload, forceReload }) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState();
   const [date, setDate] = useState(new Date());
@@ -95,7 +96,15 @@ const CreateTransaction = ({ username, open, setOpen }) => {
     Axios.post("http://localhost:5000/transactions/add", transaction, {
       withCredentials: true,
     })
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        console.log(res.data);
+        setForceReload(!forceReload); //forces reload of catlist component
+        setDescription("")
+        setAmount();
+        setCategory("");
+        setPayment("");
+        handleClose();
+      })
       .catch((error) => {
         if (error.response) {
           console.log(error.response.data);
