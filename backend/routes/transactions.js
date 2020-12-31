@@ -54,6 +54,26 @@ router.route('/add').post((req, res) => {
             res.status(400).json("Error: no result found");
         }else if(user) {
             user.transactions.push(newTransaction);
+            user.categories.forEach((cat, index)=>{
+                let subCatIndex = cat.subCategories.findIndex((subCat) => subCat.name === category);
+                if(subCatIndex != -1){
+                    let dateIndex = cat.subCategories[subCatIndex].actual.findIndex((item)=> {
+                        if((item.date.getMonth() == date.getMonth()) && (item.date.getFullYear() == date.getFullYear())){
+                            return true;
+                        }
+                    })
+                    if(dateIndex != -1){
+                        user.categories[index].subCategories[subCatIndex].actual[dateIndex].amount += amount; //adds amount to actual
+                    }else{
+                        newDateObj = {
+                            date: date,
+                            amount: amount
+                        }
+                        user.categories[index].subCategories[subCatIndex].actual.push(newDateObj)
+                    }
+                }
+            })
+            user.markModified("categories");
             user.save()
                 .then(()=>res.json("Success"))
                 .catch(err => res.status(400).json("Error: " + err));
