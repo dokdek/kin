@@ -93,22 +93,30 @@ const CategoryList = () => {
     const items = item.subCategories.map((value, index) => {
       console.log(catIndex);
       console.log(index);
+      let budgetedExists = 0;
+      let actualExists = 0;
+      if(value.budgeted[0]){
+        budgetedExists = null;
+      }
+      if(value.actual[0]){
+        actualExists = null;
+      }
       return (
         <TableRow hover role="checkbox" tabIndex={-1} key={index}>
           <TableCell>{value.name}</TableCell>
           <TableCell>
             <TextField
-              defaultValue={value.budgeted[0].amount ?? 0}
+              defaultValue={budgetedExists ?? value.budgeted[0].amount}
               onChange={(e) =>
                 updateCategory(item.category, value.name, e.target.value)
               }
               onBlur={() => budgetedOnBlur()}
             ></TextField>
           </TableCell>
-          <TableCell>{value.actual[0].amount ?? 0}</TableCell>
+          <TableCell>{actualExists ?? value.actual[0].amount}</TableCell>
           <TableCell>
-            {categoryList[catIndex].subCategories[index].budgeted[0].amount -
-              value.actual[0].amount ?? 0}
+            {budgetedExists ?? categoryList[catIndex].subCategories[index].budgeted[0].amount - actualExists ??
+              value.actual[0].amount}
           </TableCell>
         </TableRow>
       );
