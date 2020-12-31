@@ -16,8 +16,7 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import getLists from "./helpers/getLists";
 import renderCategorySelectGroup from "./helpers/renderCategorySelectGroup";
 import renderPaymentSelectGroup from "./helpers/renderPaymentSelectGroup";
-import NumberFormat from 'react-number-format';
-import { set } from "date-fns";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -51,7 +50,13 @@ function NumberFormatCustom(props) {
   );
 }
 
-const CreateTransaction = ({ username, open, setOpen, setForceReload, forceReload }) => {
+const CreateTransaction = ({
+  username,
+  open,
+  setOpen,
+  setForceReload,
+  forceReload,
+}) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState();
   const [date, setDate] = useState(new Date());
@@ -63,24 +68,25 @@ const CreateTransaction = ({ username, open, setOpen, setForceReload, forceReloa
 
   const classes = useStyles();
 
-  function formCheck(){
-    console.log(description);
-    console.log(amount);
-    console.log(payment);
-    console.log(category);
-    if((description.length > 0) && amount && (payment.length > 0) && (category.length > 0)){
+  function formCheck() {
+    if (
+      description.length > 0 &&
+      amount &&
+      payment.length > 0 &&
+      category.length > 0
+    ) {
       setFormValidated(false);
-    }else{
+    } else {
       setFormValidated(true);
     }
   }
 
   useEffect(() => {
-    if(categoryList.length === 0){
-    getLists(username, setCategoryList, setPaymentList);
+    if (categoryList.length === 0) {
+      getLists(username, setCategoryList, setPaymentList);
     }
-    formCheck()
-  }, [description,amount,payment,category]);
+    formCheck();
+  }, [description, amount, payment, category]);
 
   function onSubmit(e) {
     e.preventDefault();
@@ -99,7 +105,8 @@ const CreateTransaction = ({ username, open, setOpen, setForceReload, forceReloa
       .then((res) => {
         console.log(res.data);
         setForceReload(!forceReload); //forces reload of catlist component
-        setDescription("")
+        //clears the form
+        setDescription("");
         setAmount();
         setCategory("");
         setPayment("");
@@ -117,8 +124,6 @@ const CreateTransaction = ({ username, open, setOpen, setForceReload, forceReloa
     console.log(transaction);
   }
 
-
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -135,23 +140,23 @@ const CreateTransaction = ({ username, open, setOpen, setForceReload, forceReloa
       >
         <form noValidate autoComplete="off" onSubmit={onSubmit}>
           <FormControl required={true}>
-          <TextField
-            id="standard-basic"
-            label="Description"
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          />
+            <TextField
+              id="standard-basic"
+              label="Description"
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
+            />
           </FormControl>
           <TextField
             id="filled-basic"
             label="Amount"
             value={amount}
             onChange={(e) => {
-              setAmount(e.target.value)
-            }}            
+              setAmount(e.target.value);
+            }}
             InputProps={{
-              inputComponent: NumberFormatCustom
+              inputComponent: NumberFormatCustom,
             }}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -196,7 +201,12 @@ const CreateTransaction = ({ username, open, setOpen, setForceReload, forceReloa
               {/*Passes each pmt through the render function, read above*/}
             </Select>
           </FormControl>
-          <Button color="primary" variant="contained" type="submit" disabled={formValidated}>
+          <Button
+            color="primary"
+            variant="contained"
+            type="submit"
+            disabled={formValidated}
+          >
             Add
           </Button>
         </form>

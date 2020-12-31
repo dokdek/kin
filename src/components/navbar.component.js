@@ -20,6 +20,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import getLists from './helpers/getLists';
 import CreateTransaction from './create-transaction.component';
+import AddCats from './add-list.component';
 
 const drawerWidth = 240;
 
@@ -71,6 +72,7 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload}) => {
   const [paymentList, setPaymentList] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [addTransOpen, setAddTransOpen] = useState(false);
+  const [addCatOpen, setAddCatOpen] = useState(false);
 
 
   useEffect(() => {
@@ -127,7 +129,7 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload}) => {
         <Divider/>
         {paymentList.map((cat) => renderPaymentDrawerList(cat))} {/*Passes each cat through the render function, read above*/}
         <Divider/>
-        <ListItem button key='add-main'>
+        <ListItem button key='add-main' onClick={(()=> setAddCatOpen(true))}>
         <ListItemText>
           Add
         </ListItemText>
@@ -192,6 +194,7 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload}) => {
         </Hidden>
       </nav>
       <CreateTransaction username={username} open={addTransOpen} setOpen={setAddTransOpen} setForceReload={setForceReload} forceReload={forceReload}/>
+      <AddCats username={username} open={addCatOpen} setOpen={setAddCatOpen} setForceReload={setForceReload} forceReload={forceReload}/>
     </div>
   );
 };

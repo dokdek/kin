@@ -98,17 +98,17 @@ const CategoryList = () => {
           <TableCell>{value.name}</TableCell>
           <TableCell>
             <TextField
-              defaultValue={value.budgeted[0].amount}
+              defaultValue={value.budgeted[0].amount ?? 0}
               onChange={(e) =>
                 updateCategory(item.category, value.name, e.target.value)
               }
               onBlur={() => budgetedOnBlur()}
             ></TextField>
           </TableCell>
-          <TableCell>{value.actual[0].amount}</TableCell>
+          <TableCell>{value.actual[0].amount ?? 0}</TableCell>
           <TableCell>
             {categoryList[catIndex].subCategories[index].budgeted[0].amount -
-              value.actual[0].amount}
+              value.actual[0].amount ?? 0}
           </TableCell>
         </TableRow>
       );
