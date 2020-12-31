@@ -152,7 +152,7 @@ const CategoryList = () => {
     return () => {
       isMounted = false;
     };
-  },[username, auth]);
+  },[auth]);
 
   if (auth === true) {
     return (
@@ -188,7 +188,7 @@ const CategoryList = () => {
       </div>
     );
   } else if (auth === false) {
-    return <Redirect to="/login" />;
+    return <Redirect to="/" />;
   } else {
     return null;
   }

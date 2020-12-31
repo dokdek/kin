@@ -9,6 +9,11 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
 }));
 
+function dateParser(date){
+  let newDate = new Date(date);
+  return (newDate.getMonth()+1) + "/" + newDate.getDate() + "/" + newDate.getFullYear();
+}
+
 const TransactionList = ({ filterValue }) => {
   const classes = useStyles();
 
@@ -26,7 +31,6 @@ const TransactionList = ({ filterValue }) => {
 
   useEffect(() => {
     let isMounted = true;
-    setTransaction([]);
     checkAuth()
       .then((res) => {
         if (isMounted) {
@@ -42,11 +46,12 @@ const TransactionList = ({ filterValue }) => {
               console.log("fetching transactions");
               res.data.map((trans, index) => {
                 //maybe try setTrans (res.data.map(trans......)) since map returns an array anyways...
+                let newDate = dateParser(trans.date);
                 const modifiedTrans = {
                   id: index,
                   description: trans.description,
                   amount: trans.amount,
-                  date: trans.date, //Format date after
+                  date: newDate, //Format date after
                   category: trans.subCategory,
                   account: trans.subPayment,
                 };
@@ -59,7 +64,6 @@ const TransactionList = ({ filterValue }) => {
             .catch((err) => {
               console.log(err);
             });
-          console.log(auth);
         }
       })
       .catch((err) => {

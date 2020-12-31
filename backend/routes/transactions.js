@@ -6,7 +6,7 @@ const User = require('../models/user.model');
 
 //Helper
 function dateCompare(a,b){
-    if (a.date > a.date){
+    if (a.date > b.date){
         return 1;
     }else if(a.date < b.date){
         return -1;
@@ -39,7 +39,7 @@ router.route('/add').post((req, res) => {
     const description = req.body.description;
     const username = req.body.username;
     const amount = Number(req.body.amount);
-    const date = Date(req.body.date);
+    const date = new Date(req.body.date);
     const category = req.body.category;
     const paymentType = req.body.paymentType;
     const newTransaction = { //Create a normal object with removed ID
