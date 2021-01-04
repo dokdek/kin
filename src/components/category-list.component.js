@@ -13,6 +13,8 @@ import {
   TextField,
 } from "@material-ui/core";
 import checkAuth from "./helpers/checkAuth";
+import NumberFormat from "react-number-format";
+
 
 //NEED TO ADD DATE SORTING/FILTER
 
@@ -26,6 +28,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      isNumericString
+      prefix="$"
+    />
+  );
+}
 
 function getCategoryList(username, setCategoryList) {
   const user = { username: username };
@@ -48,7 +69,7 @@ function getCategoryList(username, setCategoryList) {
     });
 }
 
-const CategoryList = ({selectedDate, forceReload}) => {
+const CategoryList = ({ selectedDate, forceReload }) => {
   const classes = useStyles();
 
   let tempCat = {}; //used for pushing updated budget to backend.
@@ -93,18 +114,24 @@ const CategoryList = ({selectedDate, forceReload}) => {
   function renderDashboardTableRow(item, catIndex) {
     const items = item.subCategories.map((value, index) => {
       console.log(selectedDate);
-      const budgetedDateIndex = value.budgeted.findIndex((budget)=> {
-        return ((new Date(budget.date).getMonth() == selectedDate.getMonth()) && (new Date(budget.date).getFullYear() == selectedDate.getFullYear()))
-      })
-      const actualDateIndex = value.actual.findIndex((actual)=> {
-        return ((new Date(actual.date).getMonth() == selectedDate.getMonth()) && (new Date(actual.date).getFullYear() == selectedDate.getFullYear()))
-      })
+      const budgetedDateIndex = value.budgeted.findIndex((budget) => {
+        return (
+          new Date(budget.date).getMonth() == selectedDate.getMonth() &&
+          new Date(budget.date).getFullYear() == selectedDate.getFullYear()
+        );
+      });
+      const actualDateIndex = value.actual.findIndex((actual) => {
+        return (
+          new Date(actual.date).getMonth() == selectedDate.getMonth() &&
+          new Date(actual.date).getFullYear() == selectedDate.getFullYear()
+        );
+      });
       let budgetedExists = 0;
       let actualExists = 0;
-      if(budgetedDateIndex != -1){
+      if (budgetedDateIndex != -1) {
         budgetedExists = null;
       }
-      if(actualDateIndex != -1){
+      if (actualDateIndex != -1) {
         actualExists = null;
       }
       return (
@@ -112,17 +139,27 @@ const CategoryList = ({selectedDate, forceReload}) => {
           <TableCell>{value.name}</TableCell>
           <TableCell>
             <TextField
-              defaultValue={budgetedExists ?? value.budgeted[budgetedDateIndex].amount}
+              defaultValue={
+                budgetedExists ?? value.budgeted[budgetedDateIndex].amount
+              }
               onChange={(e) =>
                 updateCategory(item.category, value.name, e.target.value)
               }
               onBlur={() => budgetedOnBlur()}
-            ></TextField>
+              InputProps={{
+                inputComponent: NumberFormatCustom,
+              }}
+            />
           </TableCell>
-          <TableCell>{actualExists ?? value.actual[actualDateIndex].amount}</TableCell>
           <TableCell>
-            {(budgetedExists ?? categoryList[catIndex].subCategories[index].budgeted[budgetedDateIndex].amount) - (actualExists ??
-              value.actual[actualDateIndex].amount)}
+            {"$" + (actualExists ?? value.actual[actualDateIndex].amount)}
+          </TableCell>
+          <TableCell>
+            {"$" + ((budgetedExists ??
+              categoryList[catIndex].subCategories[index].budgeted[
+                budgetedDateIndex
+              ].amount) -
+              (actualExists ?? value.actual[actualDateIndex].amount))}
           </TableCell>
         </TableRow>
       );
@@ -166,7 +203,7 @@ const CategoryList = ({selectedDate, forceReload}) => {
     return () => {
       isMounted = false;
     };
-  },[auth,forceReload]);
+  }, [auth, forceReload]);
 
   if (auth === true) {
     return (

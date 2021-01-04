@@ -9,9 +9,16 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
 }));
 
-function dateParser(date){
+function dateParser(date) {
   let newDate = new Date(date);
-  return (newDate.getMonth()+1) + "/" + newDate.getDate() + "/" + newDate.getFullYear();
+  return (
+    newDate.getMonth() +
+    1 +
+    "/" +
+    newDate.getDate() +
+    "/" +
+    newDate.getFullYear()
+  );
 }
 
 const TransactionList = ({ filterValue, forceReload, selectedDate }) => {
@@ -47,21 +54,25 @@ const TransactionList = ({ filterValue, forceReload, selectedDate }) => {
               setTransaction([]); //clear current trans if leftover from state.
               res.data.map((trans, index) => {
                 //maybe try setTrans (res.data.map(trans......)) since map returns an array anyways...
-                if((selectedDate.getMonth() == new Date(trans.date).getMonth()) && (selectedDate.getFullYear() == new Date(trans.date).getFullYear())){
-                let newDate = dateParser(trans.date);
-                const modifiedTrans = {
-                  id: index,
-                  description: trans.description,
-                  amount: trans.amount,
-                  date: newDate, //Format date after
-                  category: trans.subCategory,
-                  account: trans.subPayment,
-                };
-                setTransaction((transaction) => [
-                  ...transaction,
-                  modifiedTrans,
-                ]);
-              }
+                if (
+                  selectedDate.getMonth() == new Date(trans.date).getMonth() &&
+                  selectedDate.getFullYear() ==
+                    new Date(trans.date).getFullYear()
+                ) {
+                  let newDate = dateParser(trans.date);
+                  const modifiedTrans = {
+                    id: index,
+                    description: trans.description,
+                    amount: "$" + -trans.amount,
+                    date: newDate, //Format date after
+                    category: trans.subCategory,
+                    account: trans.subPayment,
+                  };
+                  setTransaction((transaction) => [
+                    ...transaction,
+                    modifiedTrans,
+                  ]);
+                }
               });
             })
             .catch((err) => {
@@ -90,10 +101,10 @@ const TransactionList = ({ filterValue, forceReload, selectedDate }) => {
         <DataGrid rows={transaction} columns={columns} checkboxSelection />
       </div>
     );
-  } else if(auth === false){
+  } else if (auth === false) {
     return <Redirect to="/login" />;
-  }else{
-    return null
+  } else {
+    return null;
   }
 };
 export default TransactionList;

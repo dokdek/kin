@@ -25,13 +25,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddCats = ({ username, open, setOpen, setForceReload, forceReload }) => {
+const AddCats = ({ username, open, setOpen }) => {
   const [paymentList, setPaymentList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [mainSelect, setSelect] = useState("");
   const [mainText, setMainText] = useState("");
   const [subText, setSubText] = useState("");
+  const [accountDisabled, setAccountDisabled] = useState(false);
+  const [accountTypeDisabled, setAccountTypeDisabled] = useState(false);
+  const [catDisabled, setCatDisabled] = useState(false);
+  const [subCatDisabled, setSubCatDisabled] = useState(false);
+
   const classes = useStyles();
+
+  function formcheck(){
+    if(mainText){
+      setCatDisabled(true);
+    }
+  }
 
   function addMainCat(type) {
     let route;
@@ -109,21 +120,7 @@ const AddCats = ({ username, open, setOpen, setForceReload, forceReload }) => {
       >
         <TextField
           id="standard-basic"
-          label="Category"
-          onChange={(e) => {
-            setMainText(e.target.value);
-          }}
-        />
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={()=>addMainCat("category")}
-        >
-          New Category
-        </Button>
-        <TextField
-          id="standard-basic"
-          label="New Account Type"
+          label="New"
           onChange={(e) => {
             setMainText(e.target.value);
           }}
@@ -132,8 +129,17 @@ const AddCats = ({ username, open, setOpen, setForceReload, forceReload }) => {
           color="primary"
           variant="contained"
           onClick={()=>addMainCat("payment")}
+          disabled={accountTypeDisabled}
         >
           New Account Type
+        </Button>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={()=>addMainCat("category")}
+          disabled={catDisabled}
+        >
+          New Category
         </Button>
         <br></br>
         <br></br>
@@ -168,12 +174,13 @@ const AddCats = ({ username, open, setOpen, setForceReload, forceReload }) => {
           color="primary"
           variant="contained"
           onClick={()=>addSubCat("category")}
+          disabled={subCatDisabled}
         >
           New Subcategory
         </Button>
         <br></br>
         <FormControl>
-          <InputLabel id="payment-select">Category</InputLabel>
+          <InputLabel id="payment-select">Account</InputLabel>
           <Select
             labelId="payment-select"
             value={mainSelect}
@@ -202,6 +209,7 @@ const AddCats = ({ username, open, setOpen, setForceReload, forceReload }) => {
           color="primary"
           variant="contained"
           onClick={()=>addSubCat("payment")}
+          disabled={accountDisabled}
         >
           New Account
         </Button>

@@ -17,6 +17,10 @@ import getLists from "./helpers/getLists";
 import renderCategorySelectGroup from "./helpers/renderCategorySelectGroup";
 import renderPaymentSelectGroup from "./helpers/renderPaymentSelectGroup";
 import NumberFormat from "react-number-format";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -65,6 +69,7 @@ const CreateTransaction = ({
   const [paymentList, setPaymentList] = useState([]);
   const [payment, setPayment] = useState("");
   const [formValidated, setFormValidated] = useState(true);
+  const [toggleValue, setToggleValue] = useState("negative");
 
   const classes = useStyles();
 
@@ -90,15 +95,26 @@ const CreateTransaction = ({
 
   function onSubmit(e) {
     e.preventDefault();
-
-    const transaction = {
-      username: username,
-      description: description,
-      amount: amount,
-      date: date,
-      category: category,
-      paymentType: payment,
-    };
+    let transaction;
+    if (toggleValue == "positive") {
+       transaction = {
+        username: username,
+        description: description,
+        amount: -amount,
+        date: date,
+        category: category,
+        paymentType: payment,
+      }
+    }else{
+       transaction = {
+        username: username,
+        description: description,
+        amount: amount,
+        date: date,
+        category: category,
+        paymentType: payment,
+      }
+    }
     Axios.post("http://localhost:5000/transactions/add", transaction, {
       withCredentials: true,
     })
@@ -124,6 +140,10 @@ const CreateTransaction = ({
     console.log(transaction);
   }
 
+  const handleToggle = (e, newToggle) => {
+    setToggleValue(newToggle);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -139,15 +159,13 @@ const CreateTransaction = ({
         className={classes.paper}
       >
         <form noValidate autoComplete="off" onSubmit={onSubmit}>
-          <FormControl required={true}>
-            <TextField
-              id="standard-basic"
-              label="Description"
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            />
-          </FormControl>
+          <TextField
+            id="standard-basic"
+            label="Description"
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          />
           <TextField
             id="filled-basic"
             label="Amount"
@@ -159,6 +177,19 @@ const CreateTransaction = ({
               inputComponent: NumberFormatCustom,
             }}
           />
+          <ToggleButtonGroup
+            size="small"
+            value={toggleValue}
+            exclusive
+            onChange={handleToggle}
+          >
+            <ToggleButton value="negative">
+              <RemoveIcon />
+            </ToggleButton>
+            <ToggleButton value="positive">
+              <AddIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
               label="Date: "
