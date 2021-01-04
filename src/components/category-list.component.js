@@ -212,12 +212,8 @@ const CategoryList = ({ selectedDate, forceReload }) => {
 
   if (auth === true) {
     return (
-      <div
-        style={{ height: window.innerHeight - 64, width: window.innerWidth }}
-      >
-        {/*64 is height of toolbar, is fixed */}
-        <div className={classes.toolbar} />
         <Paper className={classes.root}>
+          <div className={classes.toolbar} />
           <TableContainer className={classes.container}>
             <Table stickyHeader>
               <TableHead>
@@ -241,7 +237,6 @@ const CategoryList = ({ selectedDate, forceReload }) => {
             </Table>
           </TableContainer>
         </Paper>
-      </div>
     );
   } else if (auth === false) {
     return <Redirect to="/" />;

@@ -8,6 +8,7 @@ import {
   Button,
   AppBar,
   CssBaseline,
+  Typography,
   Drawer,
   Hidden,
   List,
@@ -182,9 +183,12 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
           <Button onClick={()=>setAddTransOpen(true)}>
             Add Transaction
           </Button>
-          <Button component={Link} to="/signup">
-            New User
-          </Button>
+          <Typography>
+            Monthly Budget Left:  
+          </Typography>
+          <Typography >
+            $0
+          </Typography>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
