@@ -18,12 +18,15 @@ function App() {
   const [username, setUsername] = useState("");
   const [filterValue, setFilterValue] = useState({});
   const [forceReload, setForceReload] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     checkAuth()
       .then((user) => {
-        setUsername(user.username);
+        setUsername(user.username.username);
         setAuth(user.auth);
+        console.log(username);
+        console.log(auth);
       })
       .catch((err) => {
         console.log(err);
@@ -37,10 +40,12 @@ function App() {
       <Router>
         {auth && (
           <Navbar
-            username={"SyzFuhJ7ynRikOHR4eM8cOHR0KT2"}
+            username={username}
             setFilterValue={setFilterValue}
             setForceReload={setForceReload}
             forceReload={forceReload}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
           />
         )}{" "}
         {/*Hides navbar if auth is false */}
@@ -58,6 +63,7 @@ function App() {
               {...props}
               filterValue={filterValue}
               forceReload={forceReload}
+              selectedDate={selectedDate}
             />
           )}
         />
@@ -65,7 +71,7 @@ function App() {
         <Route
           path="/catlist"
           render ={(props) => (
-            <CategoryList {...props} key={forceReload}/>)}/>
+            <CategoryList key={selectedDate}{...props} selectedDate={selectedDate}/>)}/>
         {(auth === false) && <Redirect to="/login"/>}
         {auth && <Redirect from='/' to='/catlist'/>}
       </Router>

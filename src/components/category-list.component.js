@@ -48,7 +48,7 @@ function getCategoryList(username, setCategoryList) {
     });
 }
 
-const CategoryList = () => {
+const CategoryList = (selectedDate) => {
   const classes = useStyles();
 
   let tempCat = {}; //used for pushing updated budget to backend.
@@ -62,6 +62,7 @@ const CategoryList = () => {
       category: category,
       subCategory: subCategory,
       amount: value,
+      date: selectedDate.selectedDate,
     };
   }
 
@@ -91,14 +92,19 @@ const CategoryList = () => {
 
   function renderDashboardTableRow(item, catIndex) {
     const items = item.subCategories.map((value, index) => {
-      console.log(catIndex);
-      console.log(index);
+      console.log(selectedDate);
+      const budgetedDateIndex = value.budgeted.findIndex((budget)=> {
+        return ((new Date(budget.date).getMonth() == selectedDate.selectedDate.getMonth()) && (new Date(budget.date).getFullYear() == selectedDate.selectedDate.getFullYear()))
+      })
+      const actualDateIndex = value.actual.findIndex((actual)=> {
+        return ((new Date(actual.date).getMonth() == selectedDate.selectedDate.getMonth()) && (new Date(actual.date).getFullYear() == selectedDate.selectedDate.getFullYear()))
+      })
       let budgetedExists = 0;
       let actualExists = 0;
-      if(value.budgeted[0]){
+      if(budgetedDateIndex != -1){
         budgetedExists = null;
       }
-      if(value.actual[0]){
+      if(actualDateIndex != -1){
         actualExists = null;
       }
       return (
@@ -106,17 +112,17 @@ const CategoryList = () => {
           <TableCell>{value.name}</TableCell>
           <TableCell>
             <TextField
-              defaultValue={budgetedExists ?? value.budgeted[0].amount}
+              defaultValue={budgetedExists ?? value.budgeted[budgetedDateIndex].amount}
               onChange={(e) =>
                 updateCategory(item.category, value.name, e.target.value)
               }
               onBlur={() => budgetedOnBlur()}
             ></TextField>
           </TableCell>
-          <TableCell>{actualExists ?? value.actual[0].amount}</TableCell>
+          <TableCell>{actualExists ?? value.actual[actualDateIndex].amount}</TableCell>
           <TableCell>
-            {budgetedExists ?? categoryList[catIndex].subCategories[index].budgeted[0].amount - actualExists ??
-              value.actual[0].amount}
+            {(budgetedExists ?? categoryList[catIndex].subCategories[index].budgeted[budgetedDateIndex].amount) - (actualExists ??
+              value.actual[actualDateIndex].amount)}
           </TableCell>
         </TableRow>
       );

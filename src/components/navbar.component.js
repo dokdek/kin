@@ -17,6 +17,8 @@ import {
   useTheme,
   Divider
 } from "@material-ui/core";
+import DateFnsUtils from "@date-io/date-fns";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import MenuIcon from "@material-ui/icons/Menu";
 import getLists from './helpers/getLists';
 import CreateTransaction from './create-transaction.component';
@@ -64,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ username, setFilterValue, setForceReload, forceReload}) => {
+const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selectedDate, setSelectedDate}) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -73,6 +75,7 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [addTransOpen, setAddTransOpen] = useState(false);
   const [addCatOpen, setAddCatOpen] = useState(false);
+
 
 
   useEffect(() => {
@@ -152,9 +155,17 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload}) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Title
-          </Typography>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker
+              variant="inline"
+              value={selectedDate}
+              openTo="month"
+              views={["year", "month"]}
+              onChange={(e) => {
+                setSelectedDate(e);
+              }}
+            />
+          </MuiPickersUtilsProvider>
           <Button onClick={()=>setAddTransOpen(true)}>
             Add Transaction
           </Button>

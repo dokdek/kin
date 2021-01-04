@@ -134,8 +134,10 @@ router.route("/updateBudgeted").post((req, res) => {
       const dateIndex = user.categories[catIndex].subCategories[
         subCatIndex
       ].budgeted.findIndex((budgeted) => {
-        budgeted.date.getMonth() == req.body.date.getMonth() &&
-          budgeted.date.getDate() == req.body.date.getDate();
+          console.log(budgeted.date.getMonth());
+          console.log(req.body);
+        budgeted.date.getMonth() == new Date(req.body.date).getMonth() &&
+          budgeted.date.getFullYear() == new Date(req.body.date).getFullYear();
       });
       if (dateIndex == -1) {
         const newBudgeted = {
