@@ -7,9 +7,9 @@ const User = require('../models/user.model');
 //Helper
 function dateCompare(a,b){
     if (a.date > b.date){
-        return 1;
-    }else if(a.date < b.date){
         return -1;
+    }else if(a.date < b.date){
+        return 1;
     }else{
         return 0;
     }
