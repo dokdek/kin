@@ -71,7 +71,7 @@ function App() {
         <Route
           path="/catlist"
           render ={(props) => (
-            <CategoryList key={selectedDate}{...props} selectedDate={selectedDate}/>)}/>
+            <CategoryList key={selectedDate}{...props} selectedDate={selectedDate} forceReload={forceReload}/>)}/>
         {(auth === false) && <Redirect to="/login"/>}
         {auth && <Redirect from='/' to='/catlist'/>}
       </Router>

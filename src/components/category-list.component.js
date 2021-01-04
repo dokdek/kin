@@ -48,7 +48,7 @@ function getCategoryList(username, setCategoryList) {
     });
 }
 
-const CategoryList = (selectedDate) => {
+const CategoryList = ({selectedDate, forceReload}) => {
   const classes = useStyles();
 
   let tempCat = {}; //used for pushing updated budget to backend.
@@ -62,7 +62,7 @@ const CategoryList = (selectedDate) => {
       category: category,
       subCategory: subCategory,
       amount: value,
-      date: selectedDate.selectedDate,
+      date: selectedDate,
     };
   }
 
@@ -94,10 +94,10 @@ const CategoryList = (selectedDate) => {
     const items = item.subCategories.map((value, index) => {
       console.log(selectedDate);
       const budgetedDateIndex = value.budgeted.findIndex((budget)=> {
-        return ((new Date(budget.date).getMonth() == selectedDate.selectedDate.getMonth()) && (new Date(budget.date).getFullYear() == selectedDate.selectedDate.getFullYear()))
+        return ((new Date(budget.date).getMonth() == selectedDate.getMonth()) && (new Date(budget.date).getFullYear() == selectedDate.getFullYear()))
       })
       const actualDateIndex = value.actual.findIndex((actual)=> {
-        return ((new Date(actual.date).getMonth() == selectedDate.selectedDate.getMonth()) && (new Date(actual.date).getFullYear() == selectedDate.selectedDate.getFullYear()))
+        return ((new Date(actual.date).getMonth() == selectedDate.getMonth()) && (new Date(actual.date).getFullYear() == selectedDate.getFullYear()))
       })
       let budgetedExists = 0;
       let actualExists = 0;
@@ -166,7 +166,7 @@ const CategoryList = (selectedDate) => {
     return () => {
       isMounted = false;
     };
-  },[auth]);
+  },[auth,forceReload]);
 
   if (auth === true) {
     return (
