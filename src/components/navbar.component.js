@@ -5,7 +5,6 @@ import {
   IconButton,
   makeStyles,
   Toolbar,
-  Typography,
   Button,
   AppBar,
   CssBaseline,
@@ -64,6 +63,16 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  mainList: {
+    backgroundColor: 'LightGray',
+  },
+  mainListText: {
+    fontWeight: 'bold'
+  },
+  dashboard: {
+    fontWeight: 'bold',
+    fontSize: 18
+  }
 }));
 
 const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selectedDate, setSelectedDate}) => {
@@ -90,6 +99,7 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
   function renderCategoryDrawerList(item) {
     const items = item.subCategories.map((value) => {
       return (
+        <div>
         <ListItem button key={value.name} component={Link} to="/list" onClick={()=>{setFilterValue({
           type: "subCategory",
           name: value.name
@@ -99,14 +109,17 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
           {value.name}
         </ListItemText>
         </ListItem>
+        <Divider/>
+        </div>
       );
     });
-    return [<div key={item.category}><ListItem><ListItemText>{item.category}</ListItemText></ListItem><Divider/></div>, items];
+    return [<div key={item.category}><ListItem className={classes.mainList}><ListItemText classes={{primary:classes.mainListText}}>{item.category}</ListItemText></ListItem></div>, items];
   }
 
   function renderPaymentDrawerList(item) {
     const items = item.subPayments.map((value) => {
       return (
+        <div>
         <ListItem button key={value} component={Link} to="/list" onClick={()=>{setFilterValue({
           type: "subPayment",
           name: value
@@ -116,24 +129,24 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
           {value}
         </ListItemText>
         </ListItem>
+        <Divider/>
+        </div>
       );
     });
-    return [<div key={item.payment}><ListItem><ListItemText>{item.payment}</ListItemText></ListItem><Divider/></div>, items];
+    return [<div key={item.payment}><ListItem className={classes.mainList}><ListItemText classes={{primary:classes.mainListText}}>{item.payment}</ListItemText></ListItem></div>, items];
   }
 
   const drawer = (
       <List>
         <ListItem button key='dashboard' component={Link} to="/catlist">
-        <ListItemText>
+        <ListItemText classes={{primary:classes.dashboard}}>
           Dashboard
         </ListItemText>
         </ListItem>
         {categoryList.map((cat) => renderCategoryDrawerList(cat))} {/*Passes each cat through the render function, read above*/}
-        <Divider/>
         {paymentList.map((cat) => renderPaymentDrawerList(cat))} {/*Passes each cat through the render function, read above*/}
-        <Divider/>
         <ListItem button key='add-main' onClick={(()=> setAddCatOpen(true))}>
-        <ListItemText>
+        <ListItemText classes={{primary:classes.dashboard}}>
           Add
         </ListItemText>
         </ListItem>

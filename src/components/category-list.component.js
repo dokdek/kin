@@ -26,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 440,
   },
+  tableCell: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    backgroundColor: 'LightGray',
+  }
 }));
 
 function NumberFormatCustom(props) {
@@ -166,10 +171,10 @@ const CategoryList = ({ selectedDate, forceReload }) => {
     });
     return [
       <TableRow key={item.category}>
-        <TableCell>{item.category}</TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
+        <TableCell className={classes.tableCell}>{item.category}</TableCell>
+        <TableCell className={classes.tableCell}></TableCell>
+        <TableCell className={classes.tableCell}></TableCell>
+        <TableCell className={classes.tableCell}></TableCell>
       </TableRow>,
       items,
     ];
