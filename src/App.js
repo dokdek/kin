@@ -32,7 +32,7 @@ function App() {
         console.log(err);
         setAuth(false);
       });
-  }, []);
+  }, [auth, username]);
 
   const classes = useStyles();
   return (
