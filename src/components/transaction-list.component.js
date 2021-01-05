@@ -87,6 +87,7 @@ const TransactionList = ({ filterValue, forceReload, selectedDate }) => {
       });
     return () => {
       isMounted = false;
+      
     };
   }, [forceReload, selectedDate]);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import "fontsource-roboto";
 import {
   IconButton,
@@ -23,6 +23,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import getLists from './helpers/getLists';
 import CreateTransaction from './create-transaction.component';
 import AddCats from './add-list.component';
+import Axios from 'axios';
 
 const drawerWidth = 240;
 
@@ -65,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   mainList: {
-    backgroundColor: 'LightGray',
   },
   mainListText: {
     fontWeight: 'bold'
@@ -76,36 +76,50 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selectedDate, setSelectedDate}) => {
+
+const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selectedDate, setSelectedDate, setAuth, setUsername}) => {
   const theme = useTheme();
   const classes = useStyles();
+  const history = useHistory();
+
 
   const [categoryList, setCategoryList] = useState([]);
   const [paymentList, setPaymentList] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [addTransOpen, setAddTransOpen] = useState(false);
   const [addCatOpen, setAddCatOpen] = useState(false);
-
-
+  const [selected, setSelected] = useState();
 
   useEffect(() => {
     getLists(username, setCategoryList, setPaymentList);
-    console.log(username);
   }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  function logout(){
+    Axios.get("http://localhost:5000/users/logout", {withCredentials: true})
+      .then(()=>{
+        setAuth(false);
+        setUsername("");
+        history.push("/login");
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+  }
+
   function renderCategoryDrawerList(item) {
-    const items = item.subCategories.map((value) => {
+    const items = item.subCategories.map((value, index) => {
       return (
         <div>
-        <ListItem button key={value.name} component={Link} to="/list" onClick={()=>{setFilterValue({
+        <ListItem button key={value.name} component={Link} to="/list" selected={selected === value.name} onClick={()=>{setFilterValue({
           type: "subCategory",
           name: value.name
         })
-      console.log("click")}}>
+      console.log("click")
+      setSelected(value.name)}}>
         <ListItemText>
           {value.name}
         </ListItemText>
@@ -118,14 +132,15 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
   }
 
   function renderPaymentDrawerList(item) {
-    const items = item.subPayments.map((value) => {
+    const items = item.subPayments.map((value, index) => {
       return (
         <div>
-        <ListItem button key={value} component={Link} to="/list" onClick={()=>{setFilterValue({
+        <ListItem button key={value} component={Link} to="/list" selected={selected === value} onClick={()=>{setFilterValue({
           type: "subPayment",
           name: value
         })
-        console.log("click")}}>
+        console.log("click")
+        setSelected(value)}}>
         <ListItemText>
           {value}
         </ListItemText>
@@ -139,14 +154,16 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
 
   const drawer = (
       <List>
-        <ListItem button key='dashboard' component={Link} to="/catlist">
+        <ListItem button key='dashboard' component={Link} to="/catlist" onClick={() => setSelected("")}>
         <ListItemText classes={{primary:classes.dashboard}}>
           Dashboard
         </ListItemText>
         </ListItem>
         {categoryList.map((cat) => renderCategoryDrawerList(cat))} {/*Passes each cat through the render function, read above*/}
         {paymentList.map((cat) => renderPaymentDrawerList(cat))} {/*Passes each cat through the render function, read above*/}
-        <ListItem button key='add-main' onClick={(()=> setAddCatOpen(true))}>
+        <ListItem button key='add-main' onClick={()=> {
+          setAddCatOpen(true)
+        }}>
         <ListItemText classes={{primary:classes.dashboard}}>
           Add
         </ListItemText>
@@ -189,6 +206,9 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
           <Typography >
             $0
           </Typography>
+          <Button onClick={()=> logout()}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>

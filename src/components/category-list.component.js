@@ -29,8 +29,10 @@ const useStyles = makeStyles((theme) => ({
   tableCell: {
     fontSize: 18,
     fontWeight: 'bold',
-    backgroundColor: 'LightGray',
-  }
+  },
+  tableHead: {
+    fontWeight: 'bold'
+  },
 }));
 
 function NumberFormatCustom(props) {
@@ -118,7 +120,6 @@ const CategoryList = ({ selectedDate, forceReload }) => {
 
   function renderDashboardTableRow(item, catIndex) {
     const items = item.subCategories.map((value, index) => {
-      console.log(selectedDate);
       const budgetedDateIndex = value.budgeted.findIndex((budget) => {
         return (
           new Date(budget.date).getMonth() == selectedDate.getMonth() &&
@@ -154,6 +155,9 @@ const CategoryList = ({ selectedDate, forceReload }) => {
               InputProps={{
                 inputComponent: NumberFormatCustom,
               }}
+              size='small'
+              variant='outlined'
+              style={{width: 100}}
             />
           </TableCell>
           <TableCell>
@@ -208,7 +212,7 @@ const CategoryList = ({ selectedDate, forceReload }) => {
     return () => {
       isMounted = false;
     };
-  }, [auth, forceReload]);
+  }, [auth, forceReload, username]);
 
   if (auth === true) {
     return (
@@ -223,6 +227,7 @@ const CategoryList = ({ selectedDate, forceReload }) => {
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
+                      className={classes.tableHead}
                     >
                       {column.label}
                     </TableCell>

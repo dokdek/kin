@@ -29,7 +29,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Login = ({ setUsername, isAuth}) => {
+const Login = ({ setUsername, isAuth, setAuth}) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState("");
@@ -57,6 +57,7 @@ const Login = ({ setUsername, isAuth}) => {
     })
       .then((res) => {
         setUsername(jwtDecode(res.data).username);
+        setAuth(true);
         history.push("/");
       })
       .catch((error) => {
@@ -96,7 +97,7 @@ const Login = ({ setUsername, isAuth}) => {
   );
   }else{
     return(
-      <Redirect to="/"/>
+      <Redirect to="/catlist"/>
     )
   }
 };

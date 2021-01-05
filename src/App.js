@@ -46,13 +46,15 @@ function App() {
             forceReload={forceReload}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
+            setAuth={setAuth}
+            setUsername={setUsername}
           />
         )}{" "}
         {/*Hides navbar if auth is false */}
         <Route
           path="/login"
           render={(props) => (
-            <Login {...props} setUsername={setUsername} isAuth={auth} />
+            <Login {...props} setUsername={setUsername} isAuth={auth} setAuth={setAuth}/>
           )} //sends setUsername hook down to child to update parent state.
         />
         <Route
@@ -72,7 +74,7 @@ function App() {
           path="/catlist"
           render ={(props) => (
             <CategoryList key={selectedDate}{...props} selectedDate={selectedDate} forceReload={forceReload}/>)}/>
-        {(auth === false) && <Redirect to="/login"/>}
+        {(auth === false) && <Redirect from="/" to="/login"/>}
         {auth && <Redirect from='/' to='/catlist'/>}
       </Router>
     </div>

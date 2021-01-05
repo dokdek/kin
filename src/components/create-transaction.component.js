@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
 
 function NumberFormatCustom(props) {
@@ -200,11 +204,12 @@ const CreateTransaction = ({
               }}
             />
           </MuiPickersUtilsProvider>
-          <FormControl>
+          <FormControl className={classes.formControl}>
             <InputLabel id="category-select">Category</InputLabel>
             <Select
               labelId="category-select"
               value={category}
+              autoWidth
               onChange={(e) => {
                 setCategory(e.target.value);
               }}
@@ -216,11 +221,12 @@ const CreateTransaction = ({
               {/*Passes each cat through the render function, read above*/}
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl className={classes.formControl}>
             <InputLabel id="payment-select">Account</InputLabel>
             <Select
               labelId="payment-select"
               value={payment}
+              autoWidth
               onChange={(e) => {
                 setPayment(e.target.value);
               }}

@@ -2,6 +2,12 @@ const router = require("express").Router();
 let User = require("../models/user.model");
 require("dotenv").config();
 
+
+router.route("/logout").get((req,res)=>{
+  res.clearCookie('token');
+  res.status(200).json("Logged out")
+})
+
 router.route("/getCategory").post((req, res) => {
   User.findOne({ username: req.body.username }, (err, user) => {
     if (err) {
@@ -62,6 +68,10 @@ router.route("/addSubCategory").post((req, res) => {
           },
         ],
         actual: [],
+        available: [{
+          date: new Date(),
+          amount: 0
+        }]
       };
       user.categories[
         user.categories.findIndex(
