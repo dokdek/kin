@@ -189,12 +189,15 @@ const Navbar = ({ username, setFilterValue, setForceReload, forceReload, selecte
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
               variant="inline"
+              inputVariant="outlined"
+              size="small"
               value={selectedDate}
               openTo="month"
               views={["year", "month"]}
               onChange={(e) => {
                 setSelectedDate(e);
               }}
+              style={{width: 150}}
             />
           </MuiPickersUtilsProvider>
           <Button onClick={()=>setAddTransOpen(true)}>
