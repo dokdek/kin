@@ -31,25 +31,21 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   const [mainSelect, setSelect] = useState("");
   const [mainText, setMainText] = useState("");
   const [subText, setSubText] = useState("");
-  const [type, setType] = useState("");
 
   const classes = useStyles();
 
-  function addMainCat(e) {
+  function addPayment(e) {
     e.preventDefault();
-    let route;
+    let route =
+      "https://sheltered-escarpment-85529.herokuapp.com/users/addPayment";
     const user = {
       username: username,
       category: mainText,
     };
-    if (type === "payment") {
-      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addPayment";
-    } else if (type === "category") {
-      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addCategory";
-    }
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
+        setMainText("");
         setForceReload(!forceReload);
       })
       .catch((error) => {
@@ -63,21 +59,72 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
       });
   }
 
-  function addSubCat(type) {
-    let route;
+  function addCategory(e) {
+    e.preventDefault();
+    let route =
+      "https://sheltered-escarpment-85529.herokuapp.com/users/addCategory";
+    const user = {
+      username: username,
+      category: mainText,
+    };
+    Axios.post(route, user, { withCredentials: true })
+      .then((res) => {
+        console.log(res);
+        setMainText("");
+        setForceReload(!forceReload);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
+  }
+
+  function addSubCat(e) {
+    e.preventDefault();
+    let route =
+      "https://sheltered-escarpment-85529.herokuapp.com/users/addSubCategory";
     const user = {
       username: username,
       category: mainSelect,
       subCategory: subText,
     };
-    if (type === "payment") {
-      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addSubPayment";
-    } else if (type === "category") {
-      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addSubCategory";
-    }
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
+        setSelect("");
+        setSubText("");
+        setForceReload(!forceReload);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
+  }
+
+  function addSubPay(e) {
+    e.preventDefault();
+    let route =
+      "https://sheltered-escarpment-85529.herokuapp.com/users/addSubPayment";
+    const user = {
+      username: username,
+      category: mainSelect,
+      subCategory: subText,
+    };
+    Axios.post(route, user, { withCredentials: true })
+      .then((res) => {
+        console.log(res);
+        setSelect("");
+        setSubText("");
         setForceReload(!forceReload);
       })
       .catch((error) => {
@@ -92,11 +139,8 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   }
 
   useEffect(() => {
-    if (categoryList.length === 0) {
-      getLists(username, setCategoryList, setPaymentList);
-    }
-    //formCheck();
-  }, []);
+    getLists(username, setCategoryList, setPaymentList);
+  }, [forceReload]);
 
   const handleClose = () => {
     setOpen(false);
@@ -112,109 +156,104 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
         }}
         className={classes.paper}
       >
-        <form onSubmit={(e)=>{
-          setType("payment");
-          addMainCat(e)}}>
-        <TextField
-          required
-          id="standard-basic"
-          label="New Account Type"
-          onChange={(e) => {
-            setMainText(e.target.value);
+        <form
+          onSubmit={(e) => {
+            addPayment(e);
           }}
-        />
-        <Button
-          color="primary"
-          variant="contained"
-          type="submit"
         >
-          New Account Type
-        </Button>
+          <TextField
+            required
+            id="standard-basic"
+            label="New Account Type"
+            onChange={(e) => {
+              setMainText(e.target.value);
+            }}
+          />
+          <Button color="primary" variant="contained" type="submit">
+            New Account Type
+          </Button>
         </form>
-        <TextField
-          id="standard-basic"
-          label="New Main Category"
-          onChange={(e) => {
-            setMainText(e.target.value);
-          }}
-        />
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={()=>addMainCat("category")}
-        >
-          New Category
-        </Button>
+        <form onSubmit={(e) => addCategory(e)}>
+          <TextField
+            id="standard-basic"
+            label="New Main Category"
+            required
+            onChange={(e) => {
+              setMainText(e.target.value);
+            }}
+          />
+          <Button color="primary" variant="contained" type="submit">
+            New Category
+          </Button>
+        </form>
         <br></br>
         <br></br>
         <Divider />
-        <FormControl>
-          <InputLabel id="category-select">Category</InputLabel>
-          <Select
-            labelId="category-select"
-            value={mainSelect}
+        <form onSubmit={(e) => addSubCat(e)}>
+          <FormControl required>
+            <InputLabel id="category-select">Category</InputLabel>
+            <Select
+              labelId="category-select"
+              value={mainSelect}
+              onChange={(e) => {
+                setSelect(e.target.value);
+              }}
+              id="category-select"
+            >
+              {categoryList.map((cat, index) => (
+                <MenuItem key={index} value={cat.category}>
+                  {cat.category}
+                </MenuItem>
+              ))}
+              {/*Passes each cat through the render function, read above*/}
+            </Select>
+          </FormControl>
+          <br></br>
+          <TextField
+            id="standard-basic"
+            label="New Subcategory"
+            required
             onChange={(e) => {
-              setSelect(e.target.value);
+              setSubText(e.target.value);
             }}
-            id="category-select"
-          >
-            {categoryList.map((cat, index) => (
-              <MenuItem key={index} value={cat.category}>
-                {cat.category}
-              </MenuItem>
-            ))}
-            {/*Passes each cat through the render function, read above*/}
-          </Select>
-        </FormControl>
+          />
+          <Button color="primary" variant="contained" type="submit">
+            New Subcategory
+          </Button>
+        </form>
         <br></br>
-        <TextField
-          id="standard-basic"
-          label="Subcategory"
-          onChange={(e) => {
-            setSubText(e.target.value);
-          }}
-        />
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={()=>addSubCat("category")}
-        >
-          New Subcategory
-        </Button>
-        <br></br>
-        <FormControl>
-          <InputLabel id="payment-select">Account</InputLabel>
-          <Select
-            labelId="payment-select"
-            value={mainSelect}
+        <form onSubmit={(e) => addSubPay(e)}>
+          <FormControl required>
+            <InputLabel id="payment-select">Account</InputLabel>
+            <Select
+              labelId="payment-select"
+              value={mainSelect}
+              onChange={(e) => {
+                setSelect(e.target.value);
+              }}
+              id="payment-select"
+            >
+              {paymentList.map((cat, index) => (
+                <MenuItem key={index} value={cat.payment}>
+                  {cat.payment}
+                </MenuItem>
+              ))}
+              {/*Passes each cat through the render function, read above*/}
+            </Select>
+          </FormControl>
+          <br></br>
+          <TextField
+            id="standard-basic"
+            label="New Account"
+            required
             onChange={(e) => {
-              setSelect(e.target.value);
+              setSubText(e.target.value);
             }}
-            id="payment-select"
-          >
-            {paymentList.map((cat, index) => (
-              <MenuItem key={index} value={cat.payment}>
-                {cat.payment}
-              </MenuItem>
-            ))}
-            {/*Passes each cat through the render function, read above*/}
-          </Select>
-        </FormControl>
-        <br></br>
-        <TextField
-          id="standard-basic"
-          label="New Account"
-          onChange={(e) => {
-            setSubText(e.target.value);
-          }}
-        />
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={()=>addSubCat("payment")}
-        >
-          New Account
-        </Button>
+          />
+          <Button color="primary" variant="contained" type="submit">
+            New Account
+          </Button>
+        </form>
       </div>
     </Modal>
   );

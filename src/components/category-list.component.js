@@ -105,6 +105,9 @@ const CategoryList = ({ selectedDate, forceReload, setForceReload, auth, setAuth
   const [budgetedList, setBudgetedList] = useState([]);
 
   function updateCategory(category, subCategory, value) {
+    if (!value){
+      value = 0;
+    }
     tempCat = {
       username: username,
       category: category,
@@ -245,7 +248,7 @@ const CategoryList = ({ selectedDate, forceReload, setForceReload, auth, setAuth
             categoryList[catIndex].subCategories[index].budgeted[
               budgetedDateIndex
             ].amount) -
-          (actualExists ?? value.actual[actualDateIndex].amount)) < 0){
+          (actualExists ?? value.actual[actualDateIndex].amount)) <= 0){
             tempBudgeted -= (parseFloat(budgetedExists ??
               categoryList[catIndex].subCategories[index].budgeted[
                 budgetedDateIndex

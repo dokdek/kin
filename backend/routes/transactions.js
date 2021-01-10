@@ -147,10 +147,12 @@ router.route("/delete").post((req,res)=>{
                     user.transactions.splice(transIndex,1);
                     if(transaction.category == "Add to budget"){
                         let budgetIndex = user.budget.findIndex((item)=> {
-                            if(new Date(item.date).getFullYear() == new Date(transaction.date).getFullYear() && new Date(item.date).getMonth() == new Date(transaction.date).getMonth() && new Date(item.date).getDate() == new Date(transaction.date).getDate()){
+                          console.log(item);
+                            if((new Date(item.date).getFullYear() == new Date(transaction.date).getFullYear()) && (new Date(item.date).getMonth() == new Date(transaction.date).getMonth()) && (new Date(item.date).getDate() == new Date(transaction.date).getDate())){
                                 return true;
                             }
                         })
+                        console.log("budget index is " +budgetIndex);
                         user.budget[budgetIndex].amount -= transaction.amount.substring(1);
                         user.markModified("budget");
                     }else{
