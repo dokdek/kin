@@ -31,10 +31,12 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   const [mainSelect, setSelect] = useState("");
   const [mainText, setMainText] = useState("");
   const [subText, setSubText] = useState("");
+  const [type, setType] = useState("");
 
   const classes = useStyles();
 
-  function addMainCat(type) {
+  function addMainCat(e) {
+    e.preventDefault();
     let route;
     const user = {
       username: username,
@@ -110,7 +112,9 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
         }}
         className={classes.paper}
       >
-        <form onSubmit={()=>addMainCat("payment")}>
+        <form onSubmit={(e)=>{
+          setType("payment");
+          addMainCat(e)}}>
         <TextField
           required
           id="standard-basic"
