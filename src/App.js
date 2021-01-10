@@ -20,6 +20,8 @@ function App() {
   const [forceReload, setForceReload] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  
+
   useEffect(() => {
     checkAuth()
       .then((user) => {
@@ -30,7 +32,9 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        setUsername("");
         setAuth(false);
+        console.log(auth);
       });
   }, [auth, username]);
 
@@ -66,6 +70,7 @@ function App() {
               filterValue={filterValue}
               forceReload={forceReload}
               selectedDate={selectedDate}
+              setForceReload={setForceReload}
             />
           )}
         />
@@ -73,9 +78,9 @@ function App() {
         <Route
           path="/catlist"
           render ={(props) => (
-            <CategoryList key={selectedDate}{...props} selectedDate={selectedDate} forceReload={forceReload}/>)}/>
-        {(auth === false) && <Redirect from="/" to="/login"/>}
-        {auth && <Redirect from='/' to='/catlist'/>}
+            <CategoryList key={selectedDate}{...props} selectedDate={selectedDate} forceReload={forceReload} setForceReload={setForceReload} setAuth={setAuth} auth={auth}/>)}/>
+        {(auth === false) && <Redirect to="/login"/>}
+        {auth && <Redirect to='/catlist'/>}
       </Router>
     </div>
   );

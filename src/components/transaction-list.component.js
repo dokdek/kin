@@ -4,6 +4,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import checkAuth from "./helpers/checkAuth";
+import { Button, Paper } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -21,11 +22,24 @@ function dateParser(date) {
   );
 }
 
-const TransactionList = ({ filterValue, forceReload, selectedDate }) => {
+const TransactionList = ({ filterValue, forceReload, selectedDate, setForceReload }) => {
   const classes = useStyles();
 
   const [transaction, setTransaction] = useState([]);
   const [auth, setAuth] = useState(null);
+  const [deleteDisabled, setDeleteDisabled] = useState(true);
+  const [selectedValue, setSelectedValue] = useState({})
+
+
+  function deleteTransaction (){
+    Axios.post("http://localhost:5000/transactions/delete", selectedValue, {withCredentials: true})
+      .then(()=>{
+        console.log("removed");
+        setForceReload(!forceReload);
+        })
+      .catch((err)=> console.log(err));
+  }
+
 
   //Need to change widths
   const columns = [
@@ -62,6 +76,7 @@ const TransactionList = ({ filterValue, forceReload, selectedDate }) => {
                   let newDate = dateParser(trans.date);
                   const modifiedTrans = {
                     id: index,
+                    username: user.username,
                     description: trans.description,
                     amount: "$" + -trans.amount,
                     date: newDate, //Format date after
@@ -87,19 +102,27 @@ const TransactionList = ({ filterValue, forceReload, selectedDate }) => {
       });
     return () => {
       isMounted = false;
-      
     };
-  }, [forceReload, selectedDate]);
+  }, [forceReload, selectedDate, filterValue]);
 
   if (auth === true) {
     return (
       <div
-        style={{ height: window.innerHeight - 64, width: window.innerWidth }}
+        style={{ height: window.innerHeight - 64, width: "100%" }}
       >
         {" "}
         {/*64 is height of toolbar, is fixed */}
         <div className={classes.toolbar} />
-        <DataGrid rows={transaction} columns={columns} checkboxSelection />
+        <Button disabled={deleteDisabled}variant="contained" color="primary" style={{margin: '5px'}} onClick={()=>deleteTransaction()}>Delete</Button>
+        <DataGrid rows={transaction} columns={columns} checkboxSelection onSelectionChange={(e)=> {
+          setSelectedValue(e);
+          if(e.rows.length > 0){
+            console.log("enabling button");
+            setDeleteDisabled(false);
+          }else{
+            setDeleteDisabled(true);
+          }
+          console.log(selectedValue)}}/>
       </div>
     );
   } else if (auth === false) {

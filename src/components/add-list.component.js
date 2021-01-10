@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddCats = ({ username, open, setOpen }) => {
+const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   const [paymentList, setPaymentList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [mainSelect, setSelect] = useState("");
@@ -58,6 +58,7 @@ const AddCats = ({ username, open, setOpen }) => {
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
+        setForceReload(!forceReload);
       })
       .catch((error) => {
         if (error.response) {
@@ -85,6 +86,7 @@ const AddCats = ({ username, open, setOpen }) => {
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
+        setForceReload(!forceReload);
       })
       .catch((error) => {
         if (error.response) {

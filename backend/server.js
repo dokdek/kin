@@ -31,7 +31,7 @@ app.use('/transactions', transactionsRouter);
     }
   }); //redirects back to login if not authorized*/
 
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true});
+  mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true});
 connection.once('open', () => {
     console.log('MongoDB connection established.')
 })

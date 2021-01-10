@@ -130,6 +130,7 @@ const CreateTransaction = ({
         setAmount();
         setCategory("");
         setPayment("");
+        setToggleValue("negative");
         handleClose();
       })
       .catch((error) => {
@@ -215,6 +216,7 @@ const CreateTransaction = ({
               }}
               id="category-select"
             >
+              <MenuItem key="add-to-budget" value={"Add to budget"}>Add to budget</MenuItem>
               {categoryList.map((cat) =>
                 renderCategorySelectGroup(cat, ListSubheader, MenuItem)
               )}{" "}

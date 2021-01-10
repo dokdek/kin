@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   container: {
-    maxHeight: 440,
+    maxHeight: 4000,
   },
   tableCell: {
     fontSize: 18,
@@ -76,13 +76,33 @@ function getCategoryList(username, setCategoryList) {
     });
 }
 
-const CategoryList = ({ selectedDate, forceReload }) => {
+function getBudgeted(username, setBudgetedList) {
+  const user = {
+    username: username,
+  };
+  Axios.post("http://localhost:5000/users/getBudgeted", user, {
+    withCredentials: true,
+  })
+    .then((res) => {setBudgetedList(res.data);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log("Error", error.message);
+      }
+    });
+}
+
+const CategoryList = ({ selectedDate, forceReload, setForceReload, auth, setAuth}) => {
   const classes = useStyles();
 
   let tempCat = {}; //used for pushing updated budget to backend.
   const [categoryList, setCategoryList] = useState([]);
-  const [auth, setAuth] = useState();
   const [username, setUsername] = useState("");
+  const [budgetedList, setBudgetedList] = useState([]);
 
   function updateCategory(category, subCategory, value) {
     tempCat = {
@@ -103,6 +123,8 @@ const CategoryList = ({ selectedDate, forceReload }) => {
           console.log("Pushed to backend");
           tempCat = {};
           getCategoryList(username, setCategoryList);
+          getBudgeted(username, setBudgetedList);
+          setForceReload(!forceReload);
         })
         .catch((error) => {
           if (error.response) {
@@ -184,9 +206,62 @@ const CategoryList = ({ selectedDate, forceReload }) => {
     ];
   }
 
+  function renderBudgeted(){
+    let tempBudgeted = 0;
+    budgetedList.forEach((item) => {
+      if (
+        new Date(item.date).getMonth() == selectedDate.getMonth() &&
+        new Date(item.date).getFullYear() == selectedDate.getFullYear()
+      ) {
+        tempBudgeted = item.amount;
+      }
+    });
+      categoryList.map((cat, catIndex) => {
+        cat.subCategories.map((value, index) => {
+          const budgetedDateIndex = value.budgeted.findIndex((budget) => {
+            return (
+              new Date(budget.date).getMonth() == selectedDate.getMonth() &&
+              new Date(budget.date).getFullYear() ==
+                selectedDate.getFullYear()
+            );
+          });
+          const actualDateIndex = value.actual.findIndex((actual) => {
+            return (
+              new Date(actual.date).getMonth() == selectedDate.getMonth() &&
+              new Date(actual.date).getFullYear() ==
+                selectedDate.getFullYear()
+            );
+          });
+          let budgetedExists = 0;
+          let actualExists = 0;
+          if (budgetedDateIndex != -1) {
+            budgetedExists = null;
+          }
+          if (actualDateIndex != -1) {
+            actualExists = null;
+          }
+          //If actual exceeds budgeted
+          if(((budgetedExists ??
+            categoryList[catIndex].subCategories[index].budgeted[
+              budgetedDateIndex
+            ].amount) -
+          (actualExists ?? value.actual[actualDateIndex].amount)) < 0){
+            tempBudgeted -= (parseFloat(budgetedExists ??
+              categoryList[catIndex].subCategories[index].budgeted[
+                budgetedDateIndex
+              ].amount) +
+              parseFloat(actualExists ?? value.actual[actualDateIndex].amount))
+          }else{
+          tempBudgeted -= (budgetedExists ??
+              categoryList[catIndex].subCategories[index].budgeted[budgetedDateIndex].amount)
+          }
+        });
+      });
+    return <TableCell key='description' style={{minWidth: 130}} className={classes.tableHead}>{"Budget Left: $ " + tempBudgeted}</TableCell>
+  }
+
   //Need to change widths?
   const columns = [
-    { id: "description", label: "Description", width: 130 },
     { id: "budgeted", label: "Budgeted", width: 130 },
     { id: "activity", label: "Activity", width: 130 },
     { id: "available", label: "Available", width: 130 },
@@ -202,6 +277,7 @@ const CategoryList = ({ selectedDate, forceReload }) => {
           console.log(auth);
           console.log(username);
           getCategoryList(username, setCategoryList);
+          getBudgeted(username, setBudgetedList);
         }
       })
       .catch((err) => {
@@ -222,6 +298,7 @@ const CategoryList = ({ selectedDate, forceReload }) => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
+                  {renderBudgeted()}
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}

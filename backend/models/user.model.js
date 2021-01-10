@@ -10,6 +10,10 @@ const userSchema = new Schema ({
         minlength: true,
         trim: true
     },
+    budget: {
+        type: Array,
+        unique: true
+    },
     categories: {
         type: Array,
         unique: true

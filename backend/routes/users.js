@@ -3,6 +3,20 @@ let User = require("../models/user.model");
 require("dotenv").config();
 
 
+router.route("/getBudgeted").post((req,res)=>{
+  User.findOne({username: req.body.username}, (err, user)=> {
+    if(err){
+      res.status(400).json("Error: no result found");
+    }else if(user){
+      res.json(user.budget);
+    }else{
+      res.status(400).json("Error: no result found")
+    }
+  })
+})
+
+
+
 router.route("/logout").get((req,res)=>{
   res.clearCookie('token');
   res.status(200).json("Logged out")
@@ -144,14 +158,14 @@ router.route("/updateBudgeted").post((req, res) => {
       const dateIndex = user.categories[catIndex].subCategories[
         subCatIndex
       ].budgeted.findIndex((budgeted) => {
-          console.log(budgeted.date.getMonth());
-          console.log(req.body);
-        budgeted.date.getMonth() == new Date(req.body.date).getMonth() &&
-          budgeted.date.getFullYear() == new Date(req.body.date).getFullYear();
+        if((budgeted.date.getMonth() == new Date(req.body.date).getMonth()) &&
+          (budgeted.date.getFullYear() == new Date(req.body.date).getFullYear())){
+            return true;
+          };
       });
       if (dateIndex == -1) {
         const newBudgeted = {
-          date: new Date(),
+          date: new Date(req.body.date),
           amount: req.body.amount,
         };
         user.categories[catIndex].subCategories[subCatIndex].budgeted.push(
