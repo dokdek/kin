@@ -110,7 +110,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
         }}
         className={classes.paper}
       >
-        <form onSubmit={addMainCat("payment")}>
+        <form onSubmit={()=>addMainCat("payment")}>
         <TextField
           required
           id="standard-basic"
