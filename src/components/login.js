@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, Paper, Snackbar } from "@material-ui/core";
+import { TextField, Button, Paper, Snackbar, Typography } from "@material-ui/core";
 import Axios from "axios";
 import { Redirect, useHistory } from "react-router-dom";
 import jwtDecode from "jwt-decode";
@@ -80,6 +80,40 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
       });
   }
 
+  function testLogin(){
+  const user = {
+    email: "test@admin.com",
+    password: "1234567",
+    returnSecureToken: true,
+  };
+  Axios.post("https://sheltered-escarpment-85529.herokuapp.com/login/login", user, {
+    withCredentials: true,
+  })
+    .then((res) => {
+      setUsername(jwtDecode(res.data).username);
+      setAuth(true);
+      //Taken from react router docs.
+      const location = this.props.location
+      if (location.state && location.state.nextPathname) {
+        browserHistory.push(location.state.nextPathname)
+      } else {
+        browserHistory.push('/')
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        setFailureOpen(true);
+      } else if (error.request) {
+        console.log(error.request);
+        setFailureOpen(true);
+      } else {
+        console.log("Error", error.message);
+        setFailureOpen(true);
+      }
+    });
+  }
+
   if(isAuth === false){
   return (
     <div className={classes.backgroundDiv}>
@@ -94,6 +128,10 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
         <Button color="primary" variant="contained" type="submit">
           Login
         </Button>
+        <Button color="primary" variant="contained" onClick={()=>testLogin()}>
+          Test Account
+        </Button>
+        <Typography variant='caption'>Thanks for visiting. Feel free to play with the test account. A lot of things might be broken.</Typography>
       </form>
       </Paper>
       <Snackbar open={failureOpen} onClose={handleClose} autoHideDuration={6000}>

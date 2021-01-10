@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
 const connection = mongoose.connection;
 
-app.use(cors({origin: "http://localhost:3000", credentials: true}));
+app.use(cors({origin: "https://kin-site.herokuapp.com", credentials: true}));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/login', loginRouter);
