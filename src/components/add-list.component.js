@@ -51,9 +51,9 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
       category: mainText,
     };
     if (type === "payment") {
-      route = "http://localhost:5000/users/addPayment";
+      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addPayment";
     } else if (type === "category") {
-      route = "http://localhost:5000/users/addCategory";
+      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addCategory";
     }
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
@@ -79,9 +79,9 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
       subCategory: subText,
     };
     if (type === "payment") {
-      route = "http://localhost:5000/users/addSubPayment";
+      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addSubPayment";
     } else if (type === "category") {
-      route = "http://localhost:5000/users/addSubCategory";
+      route = "https://sheltered-escarpment-85529.herokuapp.com/users/addSubCategory";
     }
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {

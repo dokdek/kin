@@ -29,7 +29,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Login = ({ setUsername, isAuth, setAuth}) => {
+const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState("");
@@ -52,13 +52,19 @@ const Login = ({ setUsername, isAuth, setAuth}) => {
       password: password,
       returnSecureToken: true,
     };
-    Axios.post("http://localhost:5000/login/login", user, {
+    Axios.post("https://sheltered-escarpment-85529.herokuapp.com/login/login", user, {
       withCredentials: true,
     })
       .then((res) => {
         setUsername(jwtDecode(res.data).username);
         setAuth(true);
-        history.push("/");
+        //Taken from react router docs.
+        const location = this.props.location
+        if (location.state && location.state.nextPathname) {
+          browserHistory.push(location.state.nextPathname)
+        } else {
+          browserHistory.push('/')
+        }
       })
       .catch((error) => {
         if (error.response) {

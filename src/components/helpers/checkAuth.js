@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 
 const checkAuth = () => {
   return new Promise(function (resolve, reject) {
-    Axios.get("http://localhost:5000/auth", { withCredentials: true })
+    Axios.get("https://sheltered-escarpment-85529.herokuapp.com/auth", { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         const user = {

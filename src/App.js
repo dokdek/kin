@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, useHistory } from "react-router-dom";
 import Navbar from "./components/navbar.component";
 import TransactionList from "./components/transaction-list.component";
-import CreateTransaction from "./components/create-transaction.component";
 import CreateUser from "./components/create-user.component";
 import Login from "./components/login";
 import { makeStyles } from "@material-ui/styles";
@@ -20,8 +19,6 @@ function App() {
   const [forceReload, setForceReload] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  
-
   useEffect(() => {
     checkAuth()
       .then((user) => {
@@ -36,12 +33,14 @@ function App() {
         setAuth(false);
         console.log(auth);
       });
-  }, [auth, username]);
+  }, [auth, username, forceReload]);
+
+  const browserHistory = useHistory();
 
   const classes = useStyles();
   return (
     <div style={{ display: "flex" }}>
-      <Router>
+      <Router history={browserHistory}>
         {auth && (
           <Navbar
             username={username}
@@ -58,7 +57,7 @@ function App() {
         <Route
           path="/login"
           render={(props) => (
-            <Login {...props} setUsername={setUsername} isAuth={auth} setAuth={setAuth}/>
+            <Login {...props} setUsername={setUsername} isAuth={auth} setAuth={setAuth} setForceReload={setForceReload} forceReload={forceReload}/>
           )} //sends setUsername hook down to child to update parent state.
         />
         <Route
@@ -80,7 +79,7 @@ function App() {
           render ={(props) => (
             <CategoryList key={selectedDate}{...props} selectedDate={selectedDate} forceReload={forceReload} setForceReload={setForceReload} setAuth={setAuth} auth={auth}/>)}/>
         {(auth === false) && <Redirect to="/login"/>}
-        {auth && <Redirect to='/catlist'/>}
+        <Redirect to='/catlist'/>
       </Router>
     </div>
   );

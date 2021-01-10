@@ -32,7 +32,7 @@ const TransactionList = ({ filterValue, forceReload, selectedDate, setForceReloa
 
 
   function deleteTransaction (){
-    Axios.post("http://localhost:5000/transactions/delete", selectedValue, {withCredentials: true})
+    Axios.post("https://sheltered-escarpment-85529.herokuapp.com/transactions/delete", selectedValue, {withCredentials: true})
       .then(()=>{
         console.log("removed");
         setForceReload(!forceReload);
@@ -60,7 +60,7 @@ const TransactionList = ({ filterValue, forceReload, selectedDate, setForceReloa
             username: res.username.username,
             filter: filterValue,
           };
-          Axios.post("http://localhost:5000/transactions", user, {
+          Axios.post("https://sheltered-escarpment-85529.herokuapp.com/transactions", user, {
             withCredentials: true,
           })
             .then((res) => {

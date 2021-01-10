@@ -57,7 +57,7 @@ function NumberFormatCustom(props) {
 
 function getCategoryList(username, setCategoryList) {
   const user = { username: username };
-  Axios.post("http://localhost:5000/users/getCategory", user, {
+  Axios.post("https://sheltered-escarpment-85529.herokuapp.com/users/getCategory", user, {
     withCredentials: true,
   })
     .then((response) => {
@@ -80,7 +80,7 @@ function getBudgeted(username, setBudgetedList) {
   const user = {
     username: username,
   };
-  Axios.post("http://localhost:5000/users/getBudgeted", user, {
+  Axios.post("https://sheltered-escarpment-85529.herokuapp.com/users/getBudgeted", user, {
     withCredentials: true,
   })
     .then((res) => {setBudgetedList(res.data);
@@ -116,7 +116,7 @@ const CategoryList = ({ selectedDate, forceReload, setForceReload, auth, setAuth
 
   function budgetedOnBlur() {
     if (!(Object.keys(tempCat).length === 0)) {
-      Axios.post("http://localhost:5000/users/updateBudgeted", tempCat, {
+      Axios.post("https://sheltered-escarpment-85529.herokuapp.com/users/updateBudgeted", tempCat, {
         withCredentials: true,
       })
         .then(() => {

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import {TextField, Button} from "@material-ui/core";
 import Axios from "axios";
-const auth = require('../firebase/create-user');
-
 
 
 const CreateUser = () => {
@@ -17,7 +15,7 @@ const CreateUser = () => {
       password: password,
       returnSecureToken: true
     }
-    Axios.post("http://localhost:5000/users/signup", user)
+    Axios.post("https://sheltered-escarpment-85529.herokuapp.com/users/signup", user)
     .then(res => console.log(res.data))
     .catch(err => console.log(err));
   }

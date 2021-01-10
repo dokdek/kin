@@ -119,7 +119,7 @@ const CreateTransaction = ({
         paymentType: payment,
       }
     }
-    Axios.post("http://localhost:5000/transactions/add", transaction, {
+    Axios.post("https://sheltered-escarpment-85529.herokuapp.com/transactions/add", transaction, {
       withCredentials: true,
     })
       .then((res) => {
