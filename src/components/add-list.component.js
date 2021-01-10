@@ -31,18 +31,8 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   const [mainSelect, setSelect] = useState("");
   const [mainText, setMainText] = useState("");
   const [subText, setSubText] = useState("");
-  const [accountDisabled, setAccountDisabled] = useState(false);
-  const [accountTypeDisabled, setAccountTypeDisabled] = useState(false);
-  const [catDisabled, setCatDisabled] = useState(false);
-  const [subCatDisabled, setSubCatDisabled] = useState(false);
 
   const classes = useStyles();
-
-  function formcheck(){
-    if(mainText){
-      setCatDisabled(true);
-    }
-  }
 
   function addMainCat(type) {
     let route;
@@ -120,9 +110,11 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
         }}
         className={classes.paper}
       >
+        <form onSubmit={addMainCat("payment")}>
         <TextField
+          required
           id="standard-basic"
-          label="New"
+          label="New Account Type"
           onChange={(e) => {
             setMainText(e.target.value);
           }}
@@ -130,16 +122,22 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
         <Button
           color="primary"
           variant="contained"
-          onClick={()=>addMainCat("payment")}
-          disabled={accountTypeDisabled}
+          type="submit"
         >
           New Account Type
         </Button>
+        </form>
+        <TextField
+          id="standard-basic"
+          label="New Main Category"
+          onChange={(e) => {
+            setMainText(e.target.value);
+          }}
+        />
         <Button
           color="primary"
           variant="contained"
           onClick={()=>addMainCat("category")}
-          disabled={catDisabled}
         >
           New Category
         </Button>
@@ -176,7 +174,6 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
           color="primary"
           variant="contained"
           onClick={()=>addSubCat("category")}
-          disabled={subCatDisabled}
         >
           New Subcategory
         </Button>
@@ -211,7 +208,6 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
           color="primary"
           variant="contained"
           onClick={()=>addSubCat("payment")}
-          disabled={accountDisabled}
         >
           New Account
         </Button>
