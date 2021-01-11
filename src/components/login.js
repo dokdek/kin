@@ -131,7 +131,7 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
         <Button color="primary" variant="contained" onClick={()=>testLogin()}>
           Test Account
         </Button>
-        <Typography variant='caption'>Thanks for visiting. Feel free to play with the test account. A lot of things might be broken.</Typography>
+        <Typography variant='caption'>Thanks for visiting. Feel free to play with the test account. A lot of things might be broken. Safari (iOS/Desktop) currently does not work due to third party cookies.</Typography>
       </form>
       </Paper>
       <Snackbar open={failureOpen} onClose={handleClose} autoHideDuration={6000}>
