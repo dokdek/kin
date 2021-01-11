@@ -148,7 +148,7 @@ router.route("/delete").post((req,res)=>{
                     if(transaction.category == "Add to budget"){
                         let budgetIndex = user.budget.findIndex((item)=> {
                           console.log(item);
-                            if((new Date(item.date).getFullYear() == new Date(transaction.date).getFullYear()) && (new Date(item.date).getMonth() == new Date(transaction.date).getMonth()) && (new Date(item.date).getDate() == new Date(transaction.date).getDate())){
+                            if((new Date(item.date).getFullYear() == new Date(transaction.date).getFullYear()) && (new Date(item.date).getMonth() == new Date(transaction.date).getMonth())){
                                 return true;
                             }
                         })
