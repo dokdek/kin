@@ -198,7 +198,9 @@ const Navbar = ({
         key="dashboard"
         component={Link}
         to="/catlist"
-        onClick={() => setSelected("")}
+        onClick={() => {
+          setMobileOpen(false);
+          setSelected("");}}
       >
         <ListItemText classes={{ primary: classes.dashboard }}>
           Dashboard
