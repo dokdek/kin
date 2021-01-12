@@ -279,8 +279,10 @@ const CategoryList = ({ selectedDate, forceReload, setForceReload, auth, setAuth
           setAuth(user.auth);
           console.log(auth);
           console.log(username);
+          if(username.length > 0){
           getCategoryList(username, setCategoryList);
           getBudgeted(username, setBudgetedList);
+          }
         }
       })
       .catch((err) => {
