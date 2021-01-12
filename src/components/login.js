@@ -86,7 +86,7 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
     password: "1234567",
     returnSecureToken: true,
   };
-  Axios.post("http://localhost:5000/login/login", user, {
+  Axios.post("https://kin-site.herokuapp.com/login/login", user, {
     withCredentials: true,
   })
     .then((res) => {
@@ -131,7 +131,7 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
         <Button color="primary" variant="contained" onClick={()=>testLogin()}>
           Test Account
         </Button>
-        <Typography variant='caption'>Thanks for visiting. Feel free to play with the test account. A lot of things might be broken. Safari (iOS/Desktop) currently does not work due to third party cookies.</Typography>
+        <Typography variant='caption'>Thanks for visiting. Feel free to play with the test account. A lot of things might be broken </Typography>
       </form>
       </Paper>
       <Snackbar open={failureOpen} onClose={handleClose} autoHideDuration={6000}>
