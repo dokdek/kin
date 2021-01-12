@@ -8,7 +8,6 @@ import {
   Button,
   AppBar,
   CssBaseline,
-  Typography,
   Drawer,
   Hidden,
   List,
@@ -132,6 +131,7 @@ const Navbar = ({
                 type: "subCategory",
                 name: value.name,
               });
+              setMobileOpen(false);
               console.log("click");
               setSelected(value.name);
             }}
