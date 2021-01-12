@@ -52,7 +52,7 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
       password: password,
       returnSecureToken: true,
     };
-    Axios.post("https://sheltered-escarpment-85529.herokuapp.com/login/login", user, {
+    Axios.post("https://kin-site.herokuapp.com/login/login", user, {
       withCredentials: true,
     })
       .then((res) => {
@@ -86,7 +86,7 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
     password: "1234567",
     returnSecureToken: true,
   };
-  Axios.post("https://sheltered-escarpment-85529.herokuapp.com/login/login", user, {
+  Axios.post("http://localhost:5000/login/login", user, {
     withCredentials: true,
   })
     .then((res) => {

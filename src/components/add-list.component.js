@@ -41,7 +41,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   function addPayment(e) {
     e.preventDefault();
     let route =
-      "https://sheltered-escarpment-85529.herokuapp.com/users/addPayment";
+      "https://kin-site.herokuapp.com/users/addPayment";
     const user = {
       username: username,
       category: mainText,
@@ -66,7 +66,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   function addCategory(e) {
     e.preventDefault();
     let route =
-      "https://sheltered-escarpment-85529.herokuapp.com/users/addCategory";
+      "https://kin-site.herokuapp.com/users/addCategory";
     const user = {
       username: username,
       category: mainText,
@@ -91,7 +91,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   function addSubCat(e) {
     e.preventDefault();
     let route =
-      "https://sheltered-escarpment-85529.herokuapp.com/users/addSubCategory";
+      "https://kin-site.herokuapp.com/users/addSubCategory";
     const user = {
       username: username,
       category: mainSelect,
@@ -118,7 +118,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   function addSubPay(e) {
     e.preventDefault();
     let route =
-      "https://sheltered-escarpment-85529.herokuapp.com/users/addSubPayment";
+      "https://kin-site.herokuapp.com/users/addSubPayment";
     const user = {
       username: username,
       category: mainSelect,

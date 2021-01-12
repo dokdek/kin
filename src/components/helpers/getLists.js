@@ -6,7 +6,7 @@ export default async function getLists(
   setPaymentList
 ) {
   const user = { username: username };
-  await Axios.post("https://sheltered-escarpment-85529.herokuapp.com/users/getCategory", user, {
+  await Axios.post("https://kin-site.herokuapp.com/users/getCategory", user, {
     withCredentials: true,
   })
     .then((response) => {
@@ -24,7 +24,7 @@ export default async function getLists(
         console.log("Error", error.message);
       }
     });
-  await Axios.post("https://sheltered-escarpment-85529.herokuapp.com/users/getPayment", user, {
+  await Axios.post("https://kin-site.herokuapp.com/users/getPayment", user, {
     withCredentials: true,
   })
     .then((response) => {

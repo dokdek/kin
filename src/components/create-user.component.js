@@ -15,7 +15,7 @@ const CreateUser = () => {
       password: password,
       returnSecureToken: true
     }
-    Axios.post("https://sheltered-escarpment-85529.herokuapp.com/users/signup", user)
+    Axios.post("https://kin-site.herokuapp.com/users/signup", user)
     .then(res => console.log(res.data))
     .catch(err => console.log(err));
   }

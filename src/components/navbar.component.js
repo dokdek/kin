@@ -106,7 +106,7 @@ const Navbar = ({
   };
 
   function logout() {
-    Axios.get("https://sheltered-escarpment-85529.herokuapp.com/users/logout", { withCredentials: true })
+    Axios.get("https://kin-site.herokuapp.com/users/logout", { withCredentials: true })
       .then(() => {
         setAuth(false);
         setUsername("");
