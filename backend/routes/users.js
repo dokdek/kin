@@ -17,7 +17,7 @@ router.route("/getBudgeted").post((req,res)=>{
 
 
 
-router.route("/logout").get((req,res)=>{
+router.route("/logout").post((req,res)=>{
   res.clearCookie('token');
   res.status(200).json("Logged out")
 })

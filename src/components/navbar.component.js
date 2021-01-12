@@ -105,7 +105,7 @@ const Navbar = ({
   };
 
   function logout() {
-    Axios.get("https://kin-site.herokuapp.com/users/logout", { withCredentials: true })
+    Axios.post("https://kin-site.herokuapp.com/users/logout",{}, { withCredentials: true })
       .then(() => {
         setAuth(false);
         setUsername("");
