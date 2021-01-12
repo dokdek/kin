@@ -20,10 +20,10 @@ app.use(cors({origin: "https://kin-site.herokuapp.com", credentials: true}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'build')));
+app.use('/login', loginRouter);
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-app.use('/login', loginRouter);
 const jwtCheck = expressjwt({secret: process.env.TOKEN_SECRET, algorithms: ['HS256'], getToken: req => req.cookies.token});
 app.use(jwtCheck);
 app.use('/auth', authRouter);
