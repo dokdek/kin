@@ -205,7 +205,7 @@ const CreateTransaction = ({
               }}
             />
           </MuiPickersUtilsProvider>
-          <div style={{display: flex, flexDirection: column }}>
+          <div style={{display: "flex", flexDirection: "column" }}>
           <FormControl className={classes.formControl}>
             <InputLabel id="category-select">Category</InputLabel>
             <Select
