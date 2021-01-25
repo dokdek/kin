@@ -205,6 +205,7 @@ const CreateTransaction = ({
               }}
             />
           </MuiPickersUtilsProvider>
+          <div style={{display: flex, flexDirection: column }}>
           <FormControl className={classes.formControl}>
             <InputLabel id="category-select">Category</InputLabel>
             <Select
@@ -240,6 +241,7 @@ const CreateTransaction = ({
               {/*Passes each pmt through the render function, read above*/}
             </Select>
           </FormControl>
+          </div>
           <Button
             color="primary"
             variant="contained"
