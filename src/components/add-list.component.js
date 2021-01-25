@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
     formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    width: 120,
   },
 }));
 
@@ -194,6 +194,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
         <br></br>
         <Divider />
         <form onSubmit={(e) => addSubCat(e)}>
+        <div stlye={{display: "flex", flexDirection: "column"}}>
           <FormControl className={classes.formControl}required>
             <InputLabel id="category-select">Category</InputLabel>
             <Select
@@ -224,9 +225,11 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
           <Button color="primary" variant="contained" type="submit">
             New Subcategory
           </Button>
+          </div>
         </form>
         <br></br>
         <form onSubmit={(e) => addSubPay(e)}>
+          <div stlye={{display: "flex", flexDirection: "column"}}>
           <FormControl className={classes.formControl}required>
             <InputLabel id="payment-select">Account</InputLabel>
             <Select
@@ -257,6 +260,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
           <Button color="primary" variant="contained" type="submit">
             New Account
           </Button>
+          </div>
         </form>
       </div>
     </Modal>
