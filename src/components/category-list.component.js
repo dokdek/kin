@@ -244,7 +244,7 @@ const CategoryList = ({ selectedDate, forceReload, setForceReload, auth, setAuth
             actualExists = null;
           }
           //If actual exceeds budgeted
-          if(((budgetedExists ??
+          /*if(((budgetedExists ??
             categoryList[catIndex].subCategories[index].budgeted[
               budgetedDateIndex
             ].amount) -
@@ -254,10 +254,10 @@ const CategoryList = ({ selectedDate, forceReload, setForceReload, auth, setAuth
                 budgetedDateIndex
               ].amount) +
               parseFloat(actualExists ?? value.actual[actualDateIndex].amount))
-          }else{
+          }else{*/
           tempBudgeted -= (budgetedExists ??
               categoryList[catIndex].subCategories[index].budgeted[budgetedDateIndex].amount)
-          }
+          //}
         });
       });
     return <TableCell key='description' style={{minWidth: 130}} className={classes.tableHead}>{"Budget Left: $ " + tempBudgeted}</TableCell>
