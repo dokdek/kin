@@ -23,14 +23,15 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    justifySelf: 'center'
+    justifySelf: 'center',
+    marginTop: "50px"
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
     padding: '10px'
-  }
+  },
 }));
 
 function Alert(props) {
@@ -127,7 +128,7 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
     <div className={classes.backgroundDiv}>
       <Paper square variant="elevation">
         <ThemeProvider theme={theme}>
-        <Typography variant="h2">
+        <Typography className={classes.typography} variant="h2">
           kin budgeting
         </Typography>
         </ThemeProvider>
