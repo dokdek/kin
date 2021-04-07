@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-    formControl: {
+  formControl: {
     margin: theme.spacing(1),
     width: 120,
   },
@@ -32,24 +32,26 @@ const useStyles = makeStyles((theme) => ({
 const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
   const [paymentList, setPaymentList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
-  const [mainSelect, setSelect] = useState("");
-  const [mainText, setMainText] = useState("");
-  const [subText, setSubText] = useState("");
+  const [categorySelect, setCategorySelect] = useState("");
+  const [paymentSelect, setPaymentSelect] = useState("");
+  const [categoryText, setCategoryText] = useState("");
+  const [paymentText, setPaymentText] = useState("");
+  const [subCategoryInput, setSubCategoryInput] = useState("");
+  const [subPaymentInput, setSubPaymentInput] = useState("");
 
   const classes = useStyles();
 
   function addPayment(e) {
     e.preventDefault();
-    let route =
-      "https://kin-site.herokuapp.com/users/addPayment";
+    let route = "https://kin-site.herokuapp.com/users/addPayment";
     const user = {
       username: username,
-      category: mainText,
+      category: paymentText,
     };
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
-        setMainText("");
+        setPaymentText("");
         setForceReload(!forceReload);
       })
       .catch((error) => {
@@ -65,16 +67,15 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
 
   function addCategory(e) {
     e.preventDefault();
-    let route =
-      "https://kin-site.herokuapp.com/users/addCategory";
+    let route = "https://kin-site.herokuapp.com/users/addCategory";
     const user = {
       username: username,
-      category: mainText,
+      category: categoryText,
     };
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
-        setMainText("");
+        setCategoryText("");
         setForceReload(!forceReload);
       })
       .catch((error) => {
@@ -90,18 +91,16 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
 
   function addSubCat(e) {
     e.preventDefault();
-    let route =
-      "https://kin-site.herokuapp.com/users/addSubCategory";
+    let route = "https://kin-site.herokuapp.com/users/addSubCategory";
     const user = {
       username: username,
-      category: mainSelect,
-      subCategory: subText,
+      category: categorySelect,
+      subCategory: subCategoryInput,
     };
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
-        setSelect("");
-        setSubText("");
+        setSubCategoryInput("");
         setForceReload(!forceReload);
       })
       .catch((error) => {
@@ -117,18 +116,16 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
 
   function addSubPay(e) {
     e.preventDefault();
-    let route =
-      "https://kin-site.herokuapp.com/users/addSubPayment";
+    let route = "https://kin-site.herokuapp.com/users/addSubPayment";
     const user = {
       username: username,
-      category: mainSelect,
-      subCategory: subText,
+      category: paymentSelect,
+      subCategory: subPaymentInput,
     };
     Axios.post(route, user, { withCredentials: true })
       .then((res) => {
         console.log(res);
-        setSelect("");
-        setSubText("");
+        setSubPaymentInput("");
         setForceReload(!forceReload);
       })
       .catch((error) => {
@@ -170,7 +167,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
             id="standard-basic"
             label="New Account Type"
             onChange={(e) => {
-              setMainText(e.target.value);
+              setPaymentText(e.target.value);
             }}
           />
           <Button color="primary" variant="contained" type="submit">
@@ -183,7 +180,7 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
             label="New Main Category"
             required
             onChange={(e) => {
-              setMainText(e.target.value);
+              setCategoryText(e.target.value);
             }}
           />
           <Button color="primary" variant="contained" type="submit">
@@ -194,72 +191,72 @@ const AddCats = ({ username, open, setOpen, forceReload, setForceReload }) => {
         <br></br>
         <Divider />
         <form onSubmit={(e) => addSubCat(e)}>
-        <div stlye={{display: "flex", flexDirection: "column"}}>
-          <FormControl className={classes.formControl}required>
-            <InputLabel id="category-select">Category</InputLabel>
-            <Select
-              labelId="category-select"
-              value={mainSelect}
+          <div stlye={{ display: "flex", flexDirection: "column" }}>
+            <FormControl className={classes.formControl} required>
+              <InputLabel id="category-select">Category</InputLabel>
+              <Select
+                labelId="category-select"
+                value={categorySelect}
+                onChange={(e) => {
+                  setCategorySelect(e.target.value);
+                }}
+                id="category-select"
+              >
+                {categoryList.map((cat, index) => (
+                  <MenuItem key={index} value={cat.category}>
+                    {cat.category}
+                  </MenuItem>
+                ))}
+                {/*Passes each cat through the render function, read above*/}
+              </Select>
+            </FormControl>
+            <br></br>
+            <TextField
+              id="standard-basic"
+              label="New Subcategory"
+              required
               onChange={(e) => {
-                setSelect(e.target.value);
+                setSubCategoryInput(e.target.value);
               }}
-              id="category-select"
-            >
-              {categoryList.map((cat, index) => (
-                <MenuItem key={index} value={cat.category}>
-                  {cat.category}
-                </MenuItem>
-              ))}
-              {/*Passes each cat through the render function, read above*/}
-            </Select>
-          </FormControl>
-          <br></br>
-          <TextField
-            id="standard-basic"
-            label="New Subcategory"
-            required
-            onChange={(e) => {
-              setSubText(e.target.value);
-            }}
-          />
-          <Button color="primary" variant="contained" type="submit">
-            New Subcategory
-          </Button>
+            />
+            <Button color="primary" variant="contained" type="submit">
+              New Subcategory
+            </Button>
           </div>
         </form>
         <br></br>
         <form onSubmit={(e) => addSubPay(e)}>
-          <div stlye={{display: "flex", flexDirection: "column"}}>
-          <FormControl className={classes.formControl}required>
-            <InputLabel id="payment-select">Account</InputLabel>
-            <Select
-              labelId="payment-select"
-              value={mainSelect}
+          <div stlye={{ display: "flex", flexDirection: "column" }}>
+            <FormControl className={classes.formControl} required>
+              <InputLabel id="payment-select">Account</InputLabel>
+              <Select
+                labelId="payment-select"
+                value={paymentSelect}
+                onChange={(e) => {
+                  setPaymentSelect(e.target.value);
+                }}
+                id="payment-select"
+              >
+                {paymentList.map((cat, index) => (
+                  <MenuItem key={index} value={cat.payment}>
+                    {cat.payment}
+                  </MenuItem>
+                ))}
+                {/*Passes each cat through the render function, read above*/}
+              </Select>
+            </FormControl>
+            <br></br>
+            <TextField
+              id="standard-basic"
+              label="New Account"
+              required
               onChange={(e) => {
-                setSelect(e.target.value);
+                setSubPaymentInput(e.target.value);
               }}
-              id="payment-select"
-            >
-              {paymentList.map((cat, index) => (
-                <MenuItem key={index} value={cat.payment}>
-                  {cat.payment}
-                </MenuItem>
-              ))}
-              {/*Passes each cat through the render function, read above*/}
-            </Select>
-          </FormControl>
-          <br></br>
-          <TextField
-            id="standard-basic"
-            label="New Account"
-            required
-            onChange={(e) => {
-              setSubText(e.target.value);
-            }}
-          />
-          <Button color="primary" variant="contained" type="submit">
-            New Account
-          </Button>
+            />
+            <Button color="primary" variant="contained" type="submit">
+              New Account
+            </Button>
           </div>
         </form>
       </div>
