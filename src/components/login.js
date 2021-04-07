@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { TextField, Button, Paper, Snackbar, Typography } from "@material-ui/core";
+import { TextField, Button, Paper, Snackbar, Typography, ThemeProvider, createMuiTheme } from "@material-ui/core";
 import Axios from "axios";
 import { Redirect, useHistory } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from '@material-ui/lab/Alert';
+
+const theme = createMuiTheme({
+  typography: {
+    h2: {
+      fontFamily: "Prompt"
+    }
+  }
+});
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -118,6 +126,11 @@ const Login = ({ setUsername, isAuth, setAuth, browserHistory}) => {
   return (
     <div className={classes.backgroundDiv}>
       <Paper square variant="elevation">
+        <ThemeProvider theme={theme}>
+        <Typography variant="h2">
+          kin budgeting
+        </Typography>
+        </ThemeProvider>
       <form autoComplete="off" className={classes.form} onSubmit={onSubmit}>
         <TextField required id="email" label="Email" onChange={(e) => {
           setEmail(e.target.value)
